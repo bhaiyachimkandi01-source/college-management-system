@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Faculty Login - CMS Dashboard</title>
+  <link rel="stylesheet" href="css/faculty.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  <div class="loader-overlay" id="loader"><div class="spinner"></div></div>
+  <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+
+  <div class="admin-auth">
+    <div class="admin-auth-box">
+      <h2><i class="fas fa-chalkboard-teacher text-primary"></i> Faculty Portal</h2>
+      <p class="subtitle">Secure access for faculty members.</p>
+      <form id="facultyLoginForm">
+        <div style="margin-bottom:1rem;">
+          <label style="display:block;font-weight:500;margin-bottom:0.4rem;">Email Address</label>
+          <input type="email" id="email" class="search-box" style="width:100%;" placeholder="faculty@college.edu" required />
+        </div>
+        <div style="margin-bottom:1.25rem;">
+          <label style="display:block;font-weight:500;margin-bottom:0.4rem;">Password</label>
+          <input type="password" id="password" class="search-box" style="width:100%;" placeholder="Enter password" required />
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;padding:0.75rem;justify-content:center;">Login</button>
+      </form>
+      <div style="text-align:center;margin-top:1.25rem;color:var(--text-light);font-size:0.9rem;">
+        <a href="../admin-dashboard/" style="color:var(--accent);">Admin Login</a> &nbsp;|&nbsp;
+        <a href="../student-portal/index.html" style="color:var(--accent);">Student Portal</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:5001/api';
+    function showLoader() { document.getElementById('loader')?.classList.add('active'); }
+    function hideLoader() { document.getElementById('loader')?.classList.remove('active'); }
+    function showToast(message, type = 'info') {
+      const toast = document.createElement('div');
+      toast.style.cssText = `position:fixed;bottom:80px;right:20px;padding:12px 20px;border-radius:10px;color:#fff;font-weight:500;z-index:9999;background:${type==='success'?'#22C55E':type==='error'?'#EF4444':'#4F46E5'};`;
+      toast.textContent = message; document.body.appendChild(toast); setTimeout(()=>toast.remove(),3000);
+    }
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      const next = current === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+    });
+
+    async function apiPost(endpoint, body) {
+      showLoader();
+      try {
+        const res = await fetch(`${API_BASE}${endpoint}`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const data = await res.json(); if (!res.ok) throw new Error(data.message || 'Request failed'); return data;
+      } finally { hideLoader(); }
+    }
+
+    document.getElementById('facultyLoginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      try {
+        const data = await apiPost('/auth/faculty/login', {
+          email: document.getElementById('email').value,
+          password: document.getElementById('password').value
+        });
+        localStorage.setItem('facultyToken', data.token);
+        localStorage.setItem('facultyUser', JSON.stringify(data.user));
+        showToast('Login successful!', 'success');
+        setTimeout(() => window.location.href = 'dashboard.html', 800);
+      } catch (err) { showToast(err.message, 'error'); }
+    });
+  </script>
+</body>
+</html>

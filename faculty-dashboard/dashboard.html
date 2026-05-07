@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Faculty Dashboard - CMS</title>
+  <link rel="stylesheet" href="css/faculty.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="loader-overlay" id="loader">
+    <div class="spinner"></div>
+    <p style="margin-top:1rem;color:var(--faculty-text-light);">Loading...</p>
+  </div>
+  <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">
+    <i class="fas fa-moon" id="themeIcon"></i>
+  </button>
+
+  <div class="faculty-layout">
+    <aside class="faculty-sidebar" id="facultySidebar">
+      <div class="faculty-sidebar-header">
+        <h3><i class="fas fa-chalkboard-teacher"></i> Faculty CMS</h3>
+        <p class="subtitle">Academic Excellence Portal</p>
+      </div>
+      <ul class="faculty-sidebar-menu">
+        <li><a href="#" class="active" data-tab="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li><a href="#" data-tab="students"><i class="fas fa-user-graduate"></i> Students</a></li>
+        <li><a href="#" data-tab="attendance"><i class="fas fa-calendar-check"></i> Attendance</a></li>
+        <li><a href="#" data-tab="results"><i class="fas fa-file-alt"></i> Results</a></li>
+        <li><a href="#" data-tab="notifications"><i class="fas fa-bell"></i> Notifications</a></li>
+        <li><a href="#" data-tab="profile"><i class="fas fa-user"></i> My Profile</a></li>
+      </ul>
+      <div class="faculty-sidebar-footer">
+        <a href="#" onclick="facultyLogout()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
+    </aside>
+
+    <main class="faculty-main">
+      <button class="faculty-sidebar-toggle" id="facultySidebarToggle">
+        <i class="fas fa-bars"></i>
+      </button>
+
+      <div class="faculty-header">
+        <h1 id="facultyPageTitle">Faculty Dashboard</h1>
+        <div class="faculty-header-actions">
+          <div class="faculty-user-info">
+            <span class="faculty-user-name" id="facultyUserName">Faculty</span>
+            <div class="faculty-avatar" id="facultyAvatar">F</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DASHBOARD -->
+      <div id="dashboard" class="tab-content active">
+        <div class="faculty-stats" id="facultyStats"></div>
+        <div class="faculty-content-grid">
+          <div class="faculty-content-card">
+            <div class="faculty-content-header">
+              <h3><i class="fas fa-calendar-check text-primary"></i> Today's Attendance</h3>
+            </div>
+            <div class="faculty-content-body">
+              <canvas id="attendanceChart" height="200"></canvas>
+            </div>
+          </div>
+          <div class="faculty-content-card">
+            <div class="faculty-content-header">
+              <h3><i class="fas fa-users text-secondary"></i> Recent Students</h3>
+            </div>
+            <div class="faculty-content-body">
+              <div id="recentStudentsList"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STUDENTS (View Only) -->
+      <div id="students" class="tab-content">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+          <input type="text" id="studentSearch" class="search-box" placeholder="Search by name or roll number..." oninput="searchStudents()" />
+          <select id="deptFilter" class="search-box" style="width:auto;" onchange="loadFacultyStudents()">
+            <option value="">All Departments</option><option value="Computer Science">Computer Science</option><option value="Electronics">Electronics</option><option value="Mechanical">Mechanical</option><option value="Civil">Civil</option><option value="Business">Business</option>
+          </select>
+        </div>
+        <div class="faculty-table-container">
+          <table class="faculty-table"><thead><tr><th>Roll No</th><th>Name</th><th>Email</th><th>Department</th><th>Course</th><th>Semester</th><th>Status</th></tr></thead>
+            <tbody id="facultyStudentsTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ATTENDANCE -->
+      <div id="attendance" class="tab-content">
+        <div class="faculty-tabs">
+          <button class="faculty-tab active" onclick="switchAttTab('mark')">Mark Attendance</button>
+          <button class="faculty-tab" onclick="switchAttTab('history')">Attendance History</button>
+        </div>
+        <div id="attMark" class="att-section">
+          <div style="display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:flex-end;">
+            <div><label style="display:block;font-size:0.85rem;color:var(--text-light);margin-bottom:0.3rem;">Date</label><input type="date" id="markDate" class="search-box" style="width:auto;" /></div>
+            <div><label style="display:block;font-size:0.85rem;color:var(--text-light);margin-bottom:0.3rem;">Subject</label><input type="text" id="markSubject" class="search-box" style="width:auto;min-width:180px;" placeholder="e.g. Mathematics" /></div>
+            <div><label style="display:block;font-size:0.85rem;color:var(--text-light);margin-bottom:0.3rem;">Department</label><select id="markDept" class="search-box" style="width:auto;" onchange="loadStudentsForAttendance()"><option value="">All</option><option value="Computer Science">Computer Science</option><option value="Electronics">Electronics</option><option value="Mechanical">Mechanical</option><option value="Civil">Civil</option><option value="Business">Business</option></select></div>
+            <button class="btn btn-primary" onclick="submitBulkAttendance()"><i class="fas fa-check"></i> Save Attendance</button>
+          </div>
+          <div class="faculty-table-container">
+            <table class="faculty-table"><thead><tr><th><input type="checkbox" id="selectAll" onchange="toggleSelectAll()" /></th><th>Roll No</th><th>Name</th><th>Department</th><th>Status</th></tr></thead>
+              <tbody id="attendanceMarkTable"></tbody>
+            </table>
+          </div>
+        </div>
+        <div id="attHistory" class="att-section hidden">
+          <div style="display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;">
+            <input type="date" id="histDate" class="search-box" style="width:auto;" onchange="loadAttendanceHistory()" />
+            <input type="text" id="histSubject" class="search-box" style="width:auto;min-width:180px;" placeholder="Filter by subject..." oninput="loadAttendanceHistory()" />
+            <input type="text" id="histRoll" class="search-box" style="width:auto;min-width:180px;" placeholder="Filter by roll number..." oninput="loadAttendanceHistory()" />
+          </div>
+          <div class="faculty-table-container">
+            <table class="faculty-table"><thead><tr><th>Student</th><th>Roll No</th><th>Subject</th><th>Date</th><th>Status</th></tr></thead>
+              <tbody id="attendanceHistoryTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <div id="results" class="tab-content">
+        <div style="display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:flex-end;">
+          <div><label style="display:block;font-size:0.85rem;color:var(--text-light);margin-bottom:0.3rem;">Student</label><select id="resStudent" class="search-box" style="width:auto;min-width:220px;"><option value="">Select Student</option></select></div>
+          <div><label style="display:block;font-size:0.85rem;color:var(--text-light);margin-bottom:0.3rem;">Semester</label><input type="number" id="resSemester" class="search-box" style="width:100px;" value="1" min="1" max="8" /></div>
+          <div><label style="display:block;font-size:0.85rem;color:var(--text-light);margin-bottom:0.3rem;">Exam Type</label><select id="resExamType" class="search-box" style="width:auto;"><option value="midterm">Midterm</option><option value="final">Final</option><option value="internal">Internal</option></select></div>
+          <button class="btn btn-primary" onclick="openResultModal()"><i class="fas fa-plus"></i> Add/Update Marks</button>
+        </div>
+        <div class="faculty-table-container">
+          <table class="faculty-table"><thead><tr><th>Student</th><th>Semester</th><th>Exam</th><th>Total</th><th>%</th><th>SGPA</th><th>Result</th></tr></thead>
+            <tbody id="facultyResultsTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- NOTIFICATIONS -->
+      <div id="notifications" class="tab-content">
+        <div style="max-width:700px;">
+          <div class="faculty-content-card" style="margin-bottom:1.5rem;">
+            <div class="faculty-content-header">
+              <h3><i class="fas fa-bell text-primary"></i> Send Notification</h3>
+            </div>
+            <div class="faculty-content-body">
+              <form id="facultyNotifForm">
+                <div class="faculty-form-row">
+                  <div class="faculty-form-group">
+                    <label>Title</label>
+                    <input type="text" id="fnTitle" class="faculty-form-control" required />
+                  </div>
+                  <div class="faculty-form-group">
+                    <label>Type</label>
+                    <select id="fnType" class="faculty-form-control">
+                      <option value="notice">Notice</option><option value="exam">Exam</option><option value="fee">Fee</option><option value="attendance">Attendance</option><option value="emergency">Emergency</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="faculty-form-group">
+                  <label>Message</label>
+                  <textarea id="fnMessage" class="faculty-form-control" style="min-height:100px;resize:vertical;" required></textarea>
+                </div>
+                <div class="faculty-form-group">
+                  <label><input type="checkbox" id="fnSendAll" checked /> Send to all students</label>
+                </div>
+                <button type="submit" class="faculty-btn faculty-btn-primary">Send Notification</button>
+              </form>
+            </div>
+          </div>
+          <div class="faculty-content-card">
+            <div class="faculty-content-header">
+              <h3><i class="fas fa-history text-secondary"></i> Sent Notifications</h3>
+            </div>
+            <div class="faculty-content-body">
+              <div id="facultySentNotifications"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROFILE -->
+      <div id="profile" class="tab-content">
+        <div style="max-width:600px;">
+          <div class="faculty-content-card" style="text-align:center;padding:2rem;">
+            <div class="faculty-avatar" style="width:100px;height:100px;font-size:2.5rem;margin:0 auto 1rem;">
+              <span id="profileAvatar">F</span>
+            </div>
+            <h2 id="profileName" style="margin-bottom:0.5rem;">--</h2>
+            <p id="profileDept" style="color:var(--faculty-text-light);">--</p>
+          </div>
+          <div class="faculty-content-card" style="margin-top:1.5rem;">
+            <div class="faculty-content-header">
+              <h3><i class="fas fa-user text-primary"></i> Profile Information</h3>
+            </div>
+            <div class="faculty-content-body">
+              <div class="faculty-form-row">
+                <div class="faculty-form-group">
+                  <label>Full Name</label>
+                  <input type="text" id="fpName" class="faculty-form-control" readonly />
+                </div>
+                <div class="faculty-form-group">
+                  <label>Employee ID</label>
+                  <input type="text" id="fpEmpId" class="faculty-form-control" readonly />
+                </div>
+              </div>
+              <div class="faculty-form-row">
+                <div class="faculty-form-group">
+                  <label>Email</label>
+                  <input type="email" id="fpEmail" class="faculty-form-control" readonly />
+                </div>
+                <div class="faculty-form-group">
+                  <label>Phone</label>
+                  <input type="text" id="fpPhone" class="faculty-form-control" readonly />
+                </div>
+              </div>
+              <div class="faculty-form-row">
+                <div class="faculty-form-group">
+                  <label>Department</label>
+                  <input type="text" id="fpDept" class="faculty-form-control" readonly />
+                </div>
+                <div class="faculty-form-group">
+                  <label>Designation</label>
+                  <input type="text" id="fpDesig" class="faculty-form-control" readonly />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal -->
+  <div class="faculty-modal-overlay" id="modalOverlay">
+    <div class="faculty-modal">
+      <div class="faculty-modal-header">
+        <h3 id="modalTitle">Modal Title</h3>
+        <button class="faculty-btn faculty-btn-outline faculty-btn-sm" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="faculty-modal-body" id="modalBody"></div>
+      <div class="faculty-modal-footer" id="modalFooter">
+        <button class="faculty-btn faculty-btn-outline" onclick="closeModal()">Cancel</button>
+        <button class="faculty-btn faculty-btn-primary" id="modalSaveBtn" onclick="saveModal()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:5001/api';
+    function getFacultyToken() { return localStorage.getItem('facultyToken'); }
+    function getFacultyHeaders() { const h = { 'Content-Type': 'application/json' }; const t = getFacultyToken(); if (t) h['Authorization'] = `Bearer ${t}`; return h; }
+    function showLoader() { document.getElementById('loader')?.classList.add('active'); }
+    function hideLoader() { document.getElementById('loader')?.classList.remove('active'); }
+    function showToast(message, type = 'info') { const toast = document.createElement('div'); toast.style.cssText = `position:fixed;bottom:80px;right:20px;padding:12px 20px;border-radius:10px;color:#fff;font-weight:500;z-index:9999;background:${type==='success'?'#22C55E':type==='error'?'#EF4444':'#4F46E5'};`; toast.textContent = message; document.body.appendChild(toast); setTimeout(()=>toast.remove(),3000); }
+    function toggleTheme() { const c = document.documentElement.getAttribute('data-theme') || 'light'; const n = c === 'light' ? 'dark' : 'light'; document.documentElement.setAttribute('data-theme', n); localStorage.setItem('theme', n); }
+    document.addEventListener('DOMContentLoaded', () => { const s = localStorage.getItem('theme') || 'light'; document.documentElement.setAttribute('data-theme', s); });
+
+    async function facultyApi(endpoint, opts = {}) {
+      showLoader();
+      try {
+        const res = await fetch(`${API_BASE}${endpoint}`, { ...opts, headers: { ...getFacultyHeaders(), ...(opts.headers || {}) }, body: opts.body && typeof opts.body === 'object' ? JSON.stringify(opts.body) : opts.body });
+        const data = await res.json(); if (!res.ok) throw new Error(data.message || 'Request failed'); return data;
+      } finally { hideLoader(); }
+    }
+    if (!getFacultyToken()) window.location.href = 'index.html';
+    function facultyLogout() { localStorage.removeItem('facultyToken'); localStorage.removeItem('facultyUser'); window.location.href = 'index.html'; }
+
+    const sidebar = document.getElementById('facultySidebar');
+    const toggle = document.getElementById('facultySidebarToggle');
+    if (window.innerWidth <= 768) toggle.style.display = 'block';
+    toggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+
+    document.querySelectorAll('.admin-sidebar-menu a[data-tab]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault(); const tab = link.dataset.tab;
+        document.querySelectorAll('.faculty-sidebar-menu a').forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.getElementById(tab).classList.add('active');
+        const titles = { dashboard:'Faculty Dashboard', students:'Students', attendance:'Attendance', results:'Exam Results', notifications:'Notifications', profile:'My Profile' };
+        document.getElementById('facultyPageTitle').textContent = titles[tab];
+        if (window.innerWidth <= 768) document.getElementById('facultySidebar').classList.remove('open');
+      });
+    });
+
+    // Dashboard
+    async function loadFacultyDashboard() {
+      try {
+        const stats = await facultyApi('/dashboard/faculty-stats');
+        document.getElementById('facultyStats').innerHTML = `
+          <div class="faculty-stat-card">
+            <div class="faculty-stat-icon" style="background: var(--faculty-primary);">
+              <i class="fas fa-user-graduate"></i>
+            </div>
+            <div class="faculty-stat-label">Total Students</div>
+            <div class="faculty-stat-value">${stats.totalStudents}</div>
+          </div>
+          <div class="faculty-stat-card">
+            <div class="faculty-stat-icon" style="background: var(--faculty-info);">
+              <i class="fas fa-building"></i>
+            </div>
+            <div class="faculty-stat-label">Dept Students</div>
+            <div class="faculty-stat-value">${stats.deptStudents}</div>
+          </div>
+          <div class="faculty-stat-card">
+            <div class="faculty-stat-icon" style="background: var(--faculty-success);">
+              <i class="fas fa-calendar-check"></i>
+            </div>
+            <div class="faculty-stat-label">Today Attendance</div>
+            <div class="faculty-stat-value">${stats.attendanceToday}</div>
+          </div>
+          <div class="faculty-stat-card">
+            <div class="faculty-stat-icon" style="background: var(--faculty-warning);">
+              <i class="fas fa-file-alt"></i>
+            </div>
+            <div class="faculty-stat-label">Total Results</div>
+            <div class="faculty-stat-value">${stats.totalResults}</div>
+          </div>`;
+        document.getElementById('recentStudentsList').innerHTML = stats.recentStudents.map(s => `
+          <div style="display:flex;justify-content:space-between;padding:0.75rem 0;border-bottom:1px solid var(--faculty-border);">
+            <span><strong style="color:var(--faculty-text);">${s.name}</strong> (${s.roll_number})</span>
+            <span style="color:var(--faculty-text-light);font-size:0.8rem;">${s.department||'N/A'}</span>
+          </div>`).join('');
+        const present = stats.todayAttendance.filter(a => a.status === 'present').length;
+        const absent = stats.todayAttendance.filter(a => a.status === 'absent').length;
+        new Chart(document.getElementById('attendanceChart'), { type: 'doughnut', data: { labels: ['Present','Absent'], datasets: [{ data: [present||0, absent||0], backgroundColor: ['#22C55E','#EF4444'] }] }, options: { responsive: true, plugins: { legend: { position: 'bottom' } } } });
+      } catch (err) { console.error(err); }
+    }
+
+    // Students
+    let allStudents = [];
+    async function loadFacultyStudents() {
+      try {
+        const data = await facultyApi('/students');
+        allStudents = data.students;
+        renderFacultyStudents(allStudents);
+      } catch (err) { showToast('Failed to load students','error'); }
+    }
+    function renderFacultyStudents(list) {
+      const dept = document.getElementById('deptFilter').value;
+      let filtered = list;
+      if (dept) filtered = filtered.filter(s => s.department === dept);
+      const q = document.getElementById('studentSearch').value.toLowerCase();
+      if (q) filtered = filtered.filter(s => s.name.toLowerCase().includes(q) || s.roll_number.toLowerCase().includes(q));
+      document.getElementById('facultyStudentsTable').innerHTML = filtered.map(s => `<tr><td>${s.roll_number}</td><td>${s.name}</td><td>${s.email}</td><td>${s.department||'N/A'}</td><td>${s.course||'N/A'}</td><td>${s.semester}</td><td><span class="admin-badge ${s.status==='active'?'admin-badge-success':s.status==='inactive'?'admin-badge-danger':'admin-badge-info'}">${s.status}</span></td></tr>`).join('');
+    }
+    function searchStudents() { renderFacultyStudents(allStudents); }
+
+    // Attendance
+    function switchAttTab(tab) {
+      document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+      document.querySelectorAll('.att-section').forEach(s => s.classList.add('hidden'));
+      document.getElementById('att' + (tab==='mark'?'Mark':'History')).classList.remove('hidden');
+    }
+    async function loadStudentsForAttendance() {
+      try {
+        const data = await facultyApi('/students');
+        const dept = document.getElementById('markDept').value;
+        let students = data.students;
+        if (dept) students = students.filter(s => s.department === dept);
+        document.getElementById('attendanceMarkTable').innerHTML = students.map(s => `<tr><td><input type="checkbox" class="att-check" data-id="${s.id}" checked /></td><td>${s.roll_number}</td><td>${s.name}</td><td>${s.department||'N/A'}</td><td><select class="att-status search-box" data-id="${s.id}" style="width:auto;"><option value="present">Present</option><option value="absent">Absent</option></select></td></tr>`).join('');
+      } catch (err) { showToast('Failed to load students','error'); }
+    }
+    function toggleSelectAll() { const checked = document.getElementById('selectAll').checked; document.querySelectorAll('.att-check').forEach(c => c.checked = checked); }
+    async function submitBulkAttendance() {
+      const date = document.getElementById('markDate').value || new Date().toISOString().split('T')[0];
+      const subject = document.getElementById('markSubject').value;
+      if (!subject) { showToast('Enter subject name','warning'); return; }
+      const records = [];
+      document.querySelectorAll('.att-check:checked').forEach(cb => {
+        const id = cb.dataset.id;
+        const status = document.querySelector(`.att-status[data-id="${id}"]`).value;
+        records.push({ student: id, date, subject, status });
+      });
+      if (records.length === 0) { showToast('Select at least one student','warning'); return; }
+      try { await facultyApi('/attendance/mark', { method: 'POST', body: { records } }); showToast('Attendance saved!','success'); loadAttendanceHistory(); } catch (err) { showToast(err.message,'error'); }
+    }
+    async function loadAttendanceHistory() {
+      try {
+        const data = await facultyApi('/attendance/all');
+        const date = document.getElementById('histDate').value;
+        const subject = document.getElementById('histSubject').value.toLowerCase();
+        const roll = document.getElementById('histRoll').value.toLowerCase();
+        let filtered = data;
+        if (date) filtered = filtered.filter(a => a.date === date);
+        if (subject) filtered = filtered.filter(a => a.subject.toLowerCase().includes(subject));
+        if (roll) filtered = filtered.filter(a => (a.roll_number||'').toLowerCase().includes(roll));
+        document.getElementById('attendanceHistoryTable').innerHTML = filtered.slice(0,100).map(a => `<tr><td>${a.student_name||'N/A'}</td><td>${a.roll_number||'N/A'}</td><td>${a.subject}</td><td>${new Date(a.date).toLocaleDateString()}</td><td><span class="admin-badge ${a.status==='present'?'admin-badge-success':'admin-badge-danger'}">${a.status}</span></td></tr>`).join('');
+      } catch (err) { showToast('Failed to load attendance','error'); }
+    }
+
+    // Results
+    async function loadFacultyResults() {
+      try {
+        const [students, results] = await Promise.all([facultyApi('/students'), facultyApi('/results/all')]);
+        const sel = document.getElementById('resStudent');
+        sel.innerHTML = '<option value="">Select Student</option>' + students.students.map(s => `<option value="${s.id}">${s.name} (${s.roll_number})</option>`).join('');
+        document.getElementById('facultyResultsTable').innerHTML = results.map(r => `<tr><td>${r.student_name||'N/A'} (${r.roll_number||''})</td><td>${r.semester}</td><td>${r.exam_type}</td><td>${r.total_marks}</td><td>${r.percentage}%</td><td>${r.sgpa}</td><td><span class="admin-badge ${r.result==='pass'?'admin-badge-success':'admin-badge-danger'}">${r.result.toUpperCase()}</span></td></tr>`).join('');
+      } catch (err) { showToast('Failed to load results','error'); }
+    }
+    function openResultModal() {
+      const student = document.getElementById('resStudent').value;
+      if (!student) { showToast('Select a student first','warning'); return; }
+      document.getElementById('modalTitle').textContent = 'Add Marks';
+      const subjects = ['Mathematics','Physics','Computer Science','English','Electronics'];
+      document.getElementById('modalBody').innerHTML = `<div class="form-row">${subjects.map((sub,i) => `<div style="margin-bottom:1rem;"><label>${sub}</label><input type="number" class="search-box sub-mark" data-sub="${sub}" style="width:100%;" min="0" max="100" value="0" /></div>`).join('')}</div>`;
+      document.getElementById('modalSaveBtn').onclick = saveFacultyResult;
+      document.getElementById('modalOverlay').classList.add('active');
+    }
+    async function saveFacultyResult() {
+      const subjects = []; document.querySelectorAll('.sub-mark').forEach(el => { subjects.push({ subject: el.dataset.sub, marksObtained: parseInt(el.value), maxMarks: 100 }); });
+      try { await facultyApi('/results', { method: 'POST', body: { student: document.getElementById('resStudent').value, semester: parseInt(document.getElementById('resSemester').value), examType: document.getElementById('resExamType').value, subjects } }); showToast('Result saved!','success'); closeModal(); loadFacultyResults(); } catch (err) { showToast(err.message,'error'); }
+    }
+
+    // Notifications
+    async function loadFacultyNotifications() {
+      try { const notifs = await facultyApi('/notifications/all'); document.getElementById('facultySentNotifications').innerHTML = notifs.map(n => `<div style="display:flex;justify-content:space-between;padding:0.75rem 0;border-bottom:1px solid var(--border);"><div><span class="admin-badge ${n.type==='exam'?'admin-badge-danger':n.type==='fee'?'admin-badge-warning':n.type==='attendance'?'admin-badge-info':'admin-badge-success'}">${n.type.toUpperCase()}</span> <strong>${n.title}</strong><br><span style="color:var(--text-light);font-size:0.85rem;">${n.message.substring(0,80)}...</span></div><span style="color:var(--text-light);font-size:0.75rem;">${new Date(n.created_at).toLocaleDateString()}</span></div>`).join(''); } catch (err) { console.error(err); }
+    }
+    document.getElementById('facultyNotifForm').addEventListener('submit', async (e) => { e.preventDefault(); try { await facultyApi('/notifications', { method: 'POST', body: { title: document.getElementById('fnTitle').value, message: document.getElementById('fnMessage').value, type: document.getElementById('fnType').value, sendToAll: document.getElementById('fnSendAll').checked, recipients: [] } }); showToast('Notification sent!','success'); document.getElementById('facultyNotifForm').reset(); loadFacultyNotifications(); } catch (err) { showToast(err.message,'error'); } });
+
+    // Profile
+    const facultyUser = JSON.parse(localStorage.getItem('facultyUser') || '{}');
+    if (facultyUser.name) {
+      document.getElementById('facultyUserName').textContent = facultyUser.name;
+      document.getElementById('facultyAvatar').textContent = facultyUser.name.charAt(0).toUpperCase();
+      document.getElementById('profileName').textContent = facultyUser.name;
+      document.getElementById('profileDept').textContent = facultyUser.department + ' | ' + facultyUser.designation;
+      document.getElementById('profileAvatar').textContent = facultyUser.name.charAt(0).toUpperCase();
+      document.getElementById('fpName').value = facultyUser.name || '';
+      document.getElementById('fpEmpId').value = facultyUser.employeeId || '';
+      document.getElementById('fpEmail').value = facultyUser.email || '';
+      document.getElementById('fpPhone').value = facultyUser.phone || '';
+      document.getElementById('fpDept').value = facultyUser.department || '';
+      document.getElementById('fpDesig').value = facultyUser.designation || '';
+    }
+
+    window.closeModal = function() { document.getElementById('modalOverlay').classList.remove('active'); };
+
+    document.getElementById('markDate').value = new Date().toISOString().split('T')[0];
+    loadFacultyDashboard(); loadFacultyStudents(); loadStudentsForAttendance(); loadAttendanceHistory(); loadFacultyResults(); loadFacultyNotifications();
+  </script>
+</body>
+</html>

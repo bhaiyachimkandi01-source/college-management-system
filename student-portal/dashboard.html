@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Dashboard - CMS Portal</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+  <div class="loader-overlay" id="loader"><div class="spinner"></div></div>
+  <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+
+  <div class="dashboard-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header"><h3><i class="fas fa-graduation-cap"></i> CMS Portal</h3></div>
+      <ul class="sidebar-menu">
+        <li><a href="#" class="active" data-tab="overview"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li><a href="#" data-tab="profile"><i class="fas fa-user"></i> Profile</a></li>
+        <li><a href="#" data-tab="attendance"><i class="fas fa-calendar-check"></i> Attendance</a></li>
+        <li><a href="#" data-tab="results"><i class="fas fa-file-alt"></i> Results</a></li>
+        <li><a href="#" data-tab="fees"><i class="fas fa-wallet"></i> Fees</a></li>
+        <li><a href="#" data-tab="timetable"><i class="fas fa-clock"></i> Timetable</a></li>
+        <li><a href="#" data-tab="notifications"><i class="fas fa-bell"></i> Notifications <span id="notifBadge" class="badge badge-danger hidden" style="margin-left:auto;">0</span></a></li>
+        <li><a href="#" data-tab="help"><i class="fas fa-question-circle"></i> Help & Support</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <a href="#" onclick="logout()" style="color:#EF4444;display:flex;align-items:center;gap:0.5rem;font-weight:600;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <button id="sidebarToggle" style="display:none;position:fixed;top:1rem;left:1rem;z-index:1002;background:var(--sidebar);color:#fff;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;">
+        <i class="fas fa-bars"></i>
+      </button>
+
+      <div class="dashboard-header">
+        <h1 id="pageTitle">Dashboard Overview</h1>
+        <div class="user-info">
+          <span id="userName">Student</span>
+          <div class="user-avatar" id="userAvatar">S</div>
+        </div>
+      </div>
+
+      <!-- OVERVIEW -->
+      <div id="overview" class="tab-content active">
+        <div class="card-grid">
+          <div class="stat-card"><div class="icon bg-primary" style="color:#fff;"><i class="fas fa-calendar-check"></i></div><div class="label">Attendance</div><div class="value" id="overviewAttendance">--</div></div>
+          <div class="stat-card"><div class="icon bg-success" style="color:#fff;"><i class="fas fa-file-alt"></i></div><div class="label">Current SGPA</div><div class="value" id="overviewSGPA">--</div></div>
+          <div class="stat-card"><div class="icon bg-warning" style="color:#fff;"><i class="fas fa-wallet"></i></div><div class="label">Due Fees</div><div class="value" id="overviewFees">--</div></div>
+          <div class="stat-card"><div class="icon bg-secondary" style="color:#fff;"><i class="fas fa-bell"></i></div><div class="label">New Notifications</div><div class="value" id="overviewNotifs">--</div></div>
+        </div>
+        <div class="card-grid" style="grid-template-columns:1fr;">
+          <div class="stat-card"><h3 style="margin-bottom:1rem;"><i class="fas fa-clock text-primary"></i> Today's Classes</h3><div id="todayClasses">Loading...</div></div>
+        </div>
+      </div>
+
+      <!-- PROFILE -->
+      <div id="profile" class="tab-content">
+        <div style="max-width:700px;">
+          <div class="stat-card" style="text-align:center;padding:2rem;">
+            <div style="width:100px;height:100px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin:0 auto 1rem;overflow:hidden;"><span id="profileAvatar">S</span></div>
+            <h2 id="profileName">--</h2>
+            <p id="profileRoll" style="color:var(--text-light);">--</p>
+          </div>
+          <form id="profileForm" class="stat-card" style="margin-top:1.5rem;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+              <div class="form-group"><label>Full Name</label><input type="text" id="pName" class="form-control" /></div>
+              <div class="form-group"><label>Roll Number</label><input type="text" id="pRoll" class="form-control" readonly style="background:var(--bg);" /></div>
+              <div class="form-group"><label>Email</label><input type="email" id="pEmail" class="form-control" readonly style="background:var(--bg);" /></div>
+              <div class="form-group"><label>Phone</label><input type="tel" id="pPhone" class="form-control" /></div>
+              <div class="form-group"><label>Department</label><input type="text" id="pDept" class="form-control" /></div>
+              <div class="form-group"><label>Course</label><input type="text" id="pCourse" class="form-control" /></div>
+              <div class="form-group"><label>Semester</label><input type="number" id="pSemester" class="form-control" /></div>
+              <div class="form-group"><label>Batch</label><input type="text" id="pBatch" class="form-control" /></div>
+              <div class="form-group"><label>Parent Name</label><input type="text" id="pParentName" class="form-control" /></div>
+              <div class="form-group"><label>Parent Phone</label><input type="tel" id="pParentPhone" class="form-control" /></div>
+            </div>
+            <div class="form-group"><label>Address</label><textarea id="pAddress" class="form-control" rows="2"></textarea></div>
+            <button type="submit" class="btn-submit" style="max-width:200px;">Save Changes</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- ATTENDANCE -->
+      <div id="attendance" class="tab-content">
+        <div class="card-grid" id="attendanceCards"></div>
+        <div class="table-container" style="margin-top:1.5rem;">
+          <table class="data-table">
+            <thead><tr><th>Subject</th><th>Total Classes</th><th>Present</th><th>Absent</th><th>Percentage</th><th>Status</th></tr></thead>
+            <tbody id="attendanceTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <div id="results" class="tab-content"><div id="resultsContainer"></div></div>
+
+      <!-- FEES -->
+      <div id="fees" class="tab-content">
+        <div class="card-grid" id="feeCards"></div>
+        <div class="table-container" style="margin-top:1.5rem;">
+          <table class="data-table">
+            <thead><tr><th>Fee Type</th><th>Semester</th><th>Amount</th><th>Paid</th><th>Due</th><th>Status</th><th>Due Date</th></tr></thead>
+            <tbody id="feesTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TIMETABLE -->
+      <div id="timetable" class="tab-content"><div id="timetableContainer"></div></div>
+
+      <!-- NOTIFICATIONS -->
+      <div id="notifications" class="tab-content"><div id="notificationsList"></div></div>
+
+      <!-- HELP -->
+      <div id="help" class="tab-content">
+        <div class="stat-card" style="max-width:700px;">
+          <h3 style="margin-bottom:1rem;"><i class="fas fa-question-circle text-primary"></i> Frequently Asked Questions</h3>
+          <details style="margin-bottom:1rem;"><summary style="cursor:pointer;font-weight:600;padding:0.75rem;background:var(--bg);border-radius:8px;">How do I view my attendance?</summary><p style="padding:0.75rem;color:var(--text-light);">Go to the Attendance section from the sidebar to see subject-wise attendance with percentage bars.</p></details>
+          <details style="margin-bottom:1rem;"><summary style="cursor:pointer;font-weight:600;padding:0.75rem;background:var(--bg);border-radius:8px;">How are SGPA and CGPA calculated?</summary><p style="padding:0.75rem;color:var(--text-light);">SGPA is calculated based on your grades per semester. CGPA is the average of all semester SGPAs.</p></details>
+          <details style="margin-bottom:1rem;"><summary style="cursor:pointer;font-weight:600;padding:0.75rem;background:var(--bg);border-radius:8px;">How can I pay my fees?</summary><p style="padding:0.75rem;color:var(--text-light);">Visit the Fees section to see your pending dues. Contact the admin office for payment options.</p></details>
+          <details style="margin-bottom:1rem;"><summary style="cursor:pointer;font-weight:600;padding:0.75rem;background:var(--bg);border-radius:8px;">How do I update my profile?</summary><p style="padding:0.75rem;color:var(--text-light);">Navigate to Profile in the sidebar, edit your details, and click Save Changes.</p></details>
+        </div>
+        <div class="stat-card" style="max-width:700px;margin-top:1.5rem;">
+          <h3 style="margin-bottom:1rem;"><i class="fas fa-envelope text-primary"></i> Contact Support</h3>
+          <form id="supportForm">
+            <div class="form-group"><label>Subject</label><input type="text" class="form-control" placeholder="What is this regarding?" required /></div>
+            <div class="form-group"><label>Message</label><textarea class="form-control" rows="4" placeholder="Describe your issue..." required></textarea></div>
+            <button type="submit" class="btn-submit" style="max-width:200px;">Submit Ticket</button>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script>
+    if (!checkAuth()) return;
+
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    if (window.innerWidth <= 768) sidebarToggle.style.display = 'block';
+    sidebarToggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+
+    document.querySelectorAll('.sidebar-menu a[data-tab]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault(); const tab = link.dataset.tab;
+        document.querySelectorAll('.sidebar-menu a').forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.getElementById(tab).classList.add('active');
+        const titles = { overview:'Dashboard Overview', profile:'My Profile', attendance:'Attendance', results:'Exam Results', fees:'Fee Details', timetable:'Class Timetable', notifications:'Notifications', help:'Help & Support' };
+        document.getElementById('pageTitle').textContent = titles[tab];
+        if (window.innerWidth <= 768) sidebar.classList.remove('open');
+      });
+    });
+
+    async function loadUser() {
+      try {
+        const user = await api.auth.profile();
+        setUser(user);
+        document.getElementById('userName').textContent = user.name;
+        document.getElementById('userAvatar').textContent = user.name.charAt(0).toUpperCase();
+        document.getElementById('profileName').textContent = user.name;
+        document.getElementById('profileRoll').textContent = user.roll_number;
+        document.getElementById('profileAvatar').textContent = user.name.charAt(0).toUpperCase();
+        document.getElementById('pName').value = user.name || '';
+        document.getElementById('pRoll').value = user.roll_number || '';
+        document.getElementById('pEmail').value = user.email || '';
+        document.getElementById('pPhone').value = user.phone || '';
+        document.getElementById('pDept').value = user.department || '';
+        document.getElementById('pCourse').value = user.course || '';
+        document.getElementById('pSemester').value = user.semester || '';
+        document.getElementById('pBatch').value = user.batch || '';
+        document.getElementById('pParentName').value = user.parent_name || '';
+        document.getElementById('pParentPhone').value = user.parent_phone || '';
+        document.getElementById('pAddress').value = user.address || '';
+      } catch (err) { showToast('Failed to load profile', 'error'); }
+    }
+
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      try {
+        await api.auth.updateProfile({
+          name: document.getElementById('pName').value,
+          phone: document.getElementById('pPhone').value,
+          department: document.getElementById('pDept').value,
+          course: document.getElementById('pCourse').value,
+          semester: parseInt(document.getElementById('pSemester').value),
+          batch: document.getElementById('pBatch').value,
+          parentName: document.getElementById('pParentName').value,
+          parentPhone: document.getElementById('pParentPhone').value,
+          address: document.getElementById('pAddress').value
+        });
+        showToast('Profile updated!', 'success'); loadUser();
+      } catch (err) { showToast(err.message, 'error'); }
+    });
+
+    async function loadOverview() {
+      try {
+        const [att, res, fee, notif, tt] = await Promise.all([
+          api.attendance.getMyAttendance().catch(() => ({ summary: [] })),
+          api.results.getMyResults().catch(() => []),
+          api.fees.getMyFees().catch(() => ({ fees: [], totalDue: 0 })),
+          api.notifications.getMyNotifications().catch(() => []),
+          api.timetable.getMyTimetable().catch(() => null)
+        ]);
+        const avgAtt = att.summary.length > 0 ? (att.summary.reduce((s, x) => s + parseFloat(x.percentage), 0) / att.summary.length).toFixed(1) + '%' : 'N/A';
+        document.getElementById('overviewAttendance').textContent = avgAtt;
+        const latestResult = res.length > 0 ? res[res.length - 1] : null;
+        document.getElementById('overviewSGPA').textContent = latestResult ? latestResult.sgpa : 'N/A';
+        document.getElementById('overviewFees').textContent = fee.totalDue > 0 ? '$' + fee.totalDue : 'Paid';
+        const unread = notif.filter(n => !n.is_read).length;
+        document.getElementById('overviewNotifs').textContent = unread;
+        const badge = document.getElementById('notifBadge');
+        if (unread > 0) { badge.textContent = unread; badge.classList.remove('hidden'); }
+        const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+        const today = days[new Date().getDay()];
+        const todaySchedule = tt?.schedule ? JSON.parse(tt.schedule).find(s => s.day === today) : null;
+        const classesDiv = document.getElementById('todayClasses');
+        if (todaySchedule && todaySchedule.periods.length > 0) {
+          classesDiv.innerHTML = todaySchedule.periods.map(p => `<div style="display:flex;justify-content:space-between;padding:0.75rem 0;border-bottom:1px solid var(--border);"><span><strong>${p.subject}</strong> ${p.faculty ? '— ' + p.faculty : ''}</span><span style="color:var(--text-light);">${p.startTime} - ${p.endTime}</span></div>`).join('');
+        } else { classesDiv.innerHTML = '<p style="color:var(--text-light);">No classes scheduled for today.</p>'; }
+      } catch (err) { console.error(err); }
+    }
+
+    async function loadAttendance() {
+      try {
+        const data = await api.attendance.getMyAttendance();
+        const container = document.getElementById('attendanceCards');
+        const tbody = document.getElementById('attendanceTable');
+        container.innerHTML = ''; tbody.innerHTML = '';
+        if (!data.summary || data.summary.length === 0) {
+          container.innerHTML = '<p style="grid-column:1/-1;color:var(--text-light);">No attendance records found.</p>';
+          return;
+        }
+        data.summary.forEach(item => {
+          const color = item.percentage >= 75 ? 'var(--success)' : item.percentage >= 60 ? 'var(--warning)' : 'var(--danger)';
+          container.innerHTML += `<div class="stat-card"><div class="label">${item.subject}</div><div class="value" style="color:${color};">${item.percentage}%</div><div style="margin-top:0.5rem;"><div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${item.percentage}%;background:${color};"></div></div></div><div style="margin-top:0.5rem;font-size:0.85rem;color:var(--text-light);">${item.present} / ${item.totalClasses} classes</div>${item.percentage < 75 ? '<div class="badge badge-danger mt-1">Low Attendance</div>' : ''}</div>`;
+          tbody.innerHTML += `<tr><td><strong>${item.subject}</strong></td><td>${item.totalClasses}</td><td>${item.present}</td><td>${item.absent}</td><td><span style="color:${color};font-weight:600;">${item.percentage}%</span></td><td>${item.percentage >= 75 ? '<span class="badge badge-success">Good</span>' : item.percentage >= 60 ? '<span class="badge badge-warning">Average</span>' : '<span class="badge badge-danger">Critical</span>'}</td></tr>`;
+        });
+      } catch (err) { showToast('Failed to load attendance', 'error'); }
+    }
+
+    async function loadResults() {
+      try {
+        const results = await api.results.getMyResults();
+        const container = document.getElementById('resultsContainer');
+        if (results.length === 0) { container.innerHTML = '<p style="color:var(--text-light);">No results available yet.</p>'; return; }
+        container.innerHTML = results.map(r => {
+          const subjects = typeof r.subjects === 'string' ? JSON.parse(r.subjects) : r.subjects;
+          return `<div class="stat-card" style="margin-bottom:1.5rem;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;"><h3>Semester ${r.semester} — ${r.exam_type.charAt(0).toUpperCase() + r.exam_type.slice(1)} Exam</h3><div><span class="badge badge-info">SGPA: ${r.sgpa}</span>${r.cgpa ? `<span class="badge badge-success">CGPA: ${r.cgpa}</span>` : ''}<span class="badge ${r.result === 'pass' ? 'badge-success' : 'badge-danger'}">${r.result.toUpperCase()}</span></div></div><table class="data-table"><thead><tr><th>Subject</th><th>Marks</th><th>Max Marks</th><th>Grade</th></tr></thead><tbody>${subjects.map(s => `<tr><td>${s.subject}</td><td>${s.marksObtained}</td><td>${s.maxMarks}</td><td><span class="badge ${s.grade === 'F' ? 'badge-danger' : s.grade.startsWith('A') ? 'badge-success' : 'badge-info'}">${s.grade}</span></td></tr>`).join('')}</tbody></table><div style="margin-top:1rem;display:flex;gap:1rem;flex-wrap:wrap;"><div><strong>Total:</strong> ${r.total_marks}</div><div><strong>Percentage:</strong> ${r.percentage}%</div></div><button class="nav-btn primary mt-2" style="padding:0.5rem 1rem;" onclick="downloadResultPDF('${r.id}')"><i class="fas fa-download"></i> Download Report</button></div>`;
+        }).join('');
+      } catch (err) { showToast('Failed to load results', 'error'); }
+    }
+
+    window.downloadResultPDF = function(id) { showToast('PDF download started...', 'success'); };
+
+    async function loadFees() {
+      try {
+        const data = await api.fees.getMyFees();
+        const cards = document.getElementById('feeCards');
+        const tbody = document.getElementById('feesTable');
+        cards.innerHTML = `<div class="stat-card"><div class="label">Total Fees</div><div class="value">$${data.fees.reduce((s, f) => s + parseFloat(f.amount), 0).toFixed(2)}</div></div><div class="stat-card"><div class="label">Total Paid</div><div class="value text-success">$${data.totalPaid.toFixed(2)}</div></div><div class="stat-card"><div class="label">Total Due</div><div class="value text-danger">$${data.totalDue.toFixed(2)}</div></div>`;
+        tbody.innerHTML = data.fees.map(f => `<tr><td><strong>${f.fee_type}</strong></td><td>${f.semester}</td><td>$${f.amount}</td><td>$${f.paid_amount}</td><td style="color:var(--danger);font-weight:600;">$${f.due_amount}</td><td><span class="badge ${f.status === 'paid' ? 'badge-success' : f.status === 'partial' ? 'badge-warning' : 'badge-danger'}">${f.status.toUpperCase()}</span></td><td>${f.due_date ? new Date(f.due_date).toLocaleDateString() : 'N/A'}</td></tr>`).join('');
+      } catch (err) { showToast('Failed to load fees', 'error'); }
+    }
+
+    async function loadTimetable() {
+      try {
+        const tt = await api.timetable.getMyTimetable();
+        const container = document.getElementById('timetableContainer');
+        if (!tt || !tt.schedule) { container.innerHTML = '<p style="color:var(--text-light);">Timetable not available.</p>'; return; }
+        const schedule = typeof tt.schedule === 'string' ? JSON.parse(tt.schedule) : tt.schedule;
+        container.innerHTML = schedule.map(day => `<div class="stat-card" style="margin-bottom:1.5rem;"><h3 style="margin-bottom:1rem;">${day.day}</h3>${day.periods.length === 0 ? '<p style="color:var(--text-light);">No classes.</p>' : `<table class="data-table"><thead><tr><th>Time</th><th>Subject</th><th>Faculty</th><th>Room</th></tr></thead><tbody>${day.periods.map(p => `<tr><td><strong>${p.startTime} - ${p.endTime}</strong></td><td>${p.subject}</td><td>${p.faculty || 'N/A'}</td><td>${p.room || 'N/A'}</td></tr>`).join('')}</tbody></table>`}</div>`).join('');
+      } catch (err) { showToast('Failed to load timetable', 'error'); }
+    }
+
+    async function loadNotifications() {
+      try {
+        const notifs = await api.notifications.getMyNotifications();
+        const list = document.getElementById('notificationsList');
+        if (notifs.length === 0) { list.innerHTML = '<p style="color:var(--text-light);">No notifications yet.</p>'; return; }
+        list.innerHTML = notifs.map(n => `<div class="stat-card" style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;"><div><div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.25rem;"><span class="badge ${n.type === 'exam' ? 'badge-danger' : n.type === 'fee' ? 'badge-warning' : n.type === 'attendance' ? 'badge-info' : 'badge-success'}">${n.type.toUpperCase()}</span><strong>${n.title}</strong>${!n.is_read ? '<span class="badge badge-danger">NEW</span>' : ''}</div><p style="color:var(--text-light);font-size:0.9rem;">${n.message}</p><p style="font-size:0.75rem;color:var(--text-light);margin-top:0.25rem;">${new Date(n.created_at).toLocaleString()}</p></div>${!n.is_read ? `<button class="nav-btn outline" style="padding:0.4rem 0.75rem;font-size:0.8rem;" onclick="markRead('${n.id}')">Mark Read</button>` : ''}</div>`).join('');
+      } catch (err) { showToast('Failed to load notifications', 'error'); }
+    }
+
+    window.markRead = async function(id) {
+      try { await api.notifications.markRead(id); showToast('Marked as read', 'success'); loadNotifications(); loadOverview(); }
+      catch (err) { showToast(err.message, 'error'); }
+    };
+
+    document.getElementById('supportForm').addEventListener('submit', (e) => { e.preventDefault(); showToast('Support ticket submitted!', 'success'); e.target.reset(); });
+
+    loadUser(); loadOverview(); loadAttendance(); loadResults(); loadFees(); loadTimetable(); loadNotifications();
+  </script>
+</body>
+</html>
