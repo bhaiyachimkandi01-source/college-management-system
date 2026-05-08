@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Faculty Dashboard - CMS</title>
+  <link rel="stylesheet" href="../css/unified.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  <div class="loader-overlay" id="loader"><div class="spinner"></div></div>
+  <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+
+  <div class="admin-layout">
+    <aside class="admin-sidebar" id="facultySidebar">
+      <div class="admin-sidebar-header">
+        <h3><i class="fas fa-chalkboard-teacher"></i> Faculty CMS</h3>
+      </div>
+      <ul class="admin-sidebar-menu">
+        <li><a href="#" class="active" data-tab="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li><a href="#" data-tab="attendance"><i class="fas fa-calendar-check"></i> Mark Attendance</a></li>
+        <li><a href="#" data-tab="results"><i class="fas fa-file-alt"></i> Post Results</a></li>
+        <li><a href="#" data-tab="notifications"><i class="fas fa-bell"></i> Notifications</a></li>
+        <li><a href="#" data-tab="profile"><i class="fas fa-user"></i> Profile</a></li>
+      </ul>
+      <div class="admin-sidebar-footer">
+        <a href="#" onclick="logout()" style="color:#EF4444;display:flex;align-items:center;gap:0.5rem;font-weight:600;">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-header">
+        <h1 id="facultyPageTitle">Dashboard</h1>
+        <div class="admin-header-actions">
+          <span id="facultyUserName">Faculty</span>
+          <div style="width:40px;height:40px;border-radius:50%;background:var(--secondary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;" id="facultyAvatar">F</div>
+        </div>
+      </div>
+
+      <!-- DASHBOARD TAB -->
+      <div id="dashboard" class="tab-content active">
+        <div class="admin-stats">
+          <div class="admin-stat-card">
+            <h3>My Classes</h3>
+            <div class="value" id="myClasses">0</div>
+          </div>
+          <div class="admin-stat-card">
+            <h3>Students Taught</h3>
+            <div class="value" id="studentsTaught">0</div>
+          </div>
+          <div class="admin-stat-card">
+            <h3>Results Posted</h3>
+            <div class="value" id="resultsPosted">0</div>
+          </div>
+          <div class="admin-stat-card">
+            <h3>Unread Notifications</h3>
+            <div class="value" id="unreadNotifications">0</div>
+          </div>
+        </div>
+        <p style="text-align:center;color:var(--text-light);margin-top:2rem;">
+          Welcome to the Faculty Dashboard. Use the sidebar to mark attendance, post results, and manage your classes.
+        </p>
+      </div>
+
+      <!-- ATTENDANCE TAB -->
+      <div id="attendance" class="tab-content">
+        <div style="margin-bottom:1.5rem;">
+          <h3 style="margin-bottom:1rem;">Mark Student Attendance</h3>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1rem;">
+            <select id="attendanceClass" class="search-box">
+              <option value="">Select Class</option>
+              <option value="CS101">Computer Science 101</option>
+              <option value="CS102">Computer Science 102</option>
+              <option value="MATH101">Mathematics 101</option>
+            </select>
+            <input type="date" id="attendanceDate" class="search-box" />
+          </div>
+          <button class="btn btn-primary" onclick="loadAttendanceStudents()">Load Students</button>
+        </div>
+        
+        <div id="attendanceStudents" style="display:none;">
+          <div class="admin-table-container">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Roll No</th>
+                  <th>Name</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="attendanceTableBody">
+                <tr><td colspan="4" style="text-align:center;padding:2rem;">Select a class and date to load students</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="margin-top:1rem;text-align:right;">
+            <button class="btn btn-success" onclick="submitAttendance()">Submit Attendance</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESULTS TAB -->
+      <div id="results" class="tab-content">
+        <div style="margin-bottom:1.5rem;">
+          <h3 style="margin-bottom:1rem;">Post Student Results</h3>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1rem;">
+            <select id="resultsClass" class="search-box">
+              <option value="">Select Class</option>
+              <option value="CS101">Computer Science 101</option>
+              <option value="CS102">Computer Science 102</option>
+              <option value="MATH101">Mathematics 101</option>
+            </select>
+            <input type="text" id="resultsSemester" class="search-box" placeholder="Semester (e.g., Fall 2024)" />
+          </div>
+          <button class="btn btn-primary" onclick="loadResultsStudents()">Load Students</button>
+        </div>
+        
+        <div id="resultsStudents" style="display:none;">
+          <div class="admin-table-container">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Roll No</th>
+                  <th>Name</th>
+                  <th>Marks</th>
+                  <th>Grade</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="resultsTableBody">
+                <tr><td colspan="5" style="text-align:center;padding:2rem;">Select a class to load students</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="margin-top:1rem;text-align:right;">
+            <button class="btn btn-success" onclick="submitResults()">Submit Results</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOTIFICATIONS TAB -->
+      <div id="notifications" class="tab-content">
+        <h3 style="margin-bottom:1rem;">My Notifications</h3>
+        <div id="notificationsList">
+          <p style="text-align:center;color:var(--text-light);padding:2rem;">Loading notifications...</p>
+        </div>
+      </div>
+
+      <!-- PROFILE TAB -->
+      <div id="profile" class="tab-content">
+        <div class="admin-stat-card" style="max-width:600px;margin:0 auto;">
+          <h3 style="margin-bottom:1.5rem;">My Profile</h3>
+          <div id="profileContent">
+            <p style="text-align:center;color:var(--text-light);padding:2rem;">Loading profile...</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/unified.js"></script>
+  <script src="faculty-dashboard.js"></script>
+</body>
+</html>

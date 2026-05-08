@@ -2,41 +2,63 @@
 
 A full-stack College Management System built with **HTML, CSS, JavaScript, Node.js, Express, and MySQL**.
 
+## 🚀 Unified Application
+
+This project now features a **single unified application** that automatically routes users to their appropriate dashboards based on their role.
+
+### Quick Start for Hackathon Judges
+
+1. **Start the server:**
+   ```bash
+   cd backend
+   npm install
+   npm start
+   ```
+
+2. **Open the application:**
+   - Visit: `http://localhost:5000`
+   - Use demo credentials below
+
+3. **Demo Credentials:**
+   - **Admin:** admin@college.edu / admin123
+   - **Faculty:** faculty@college.edu / faculty123
+   - **Student:** Use roll number as username / password
+
 ## Project Structure
 
 ```
 college-management-system/
+├── index.html                    # Unified landing page & login
+├── register.html                 # Student registration
+├── css/
+│   └── unified.css              # Unified styles for all dashboards
+├── js/
+│   └── unified.js               # Unified JavaScript utilities
+├── dashboards/
+│   ├── admin-dashboard.html     # Admin dashboard
+│   ├── admin-dashboard.js       # Admin dashboard logic
+│   ├── faculty-dashboard.html   # Faculty dashboard
+│   ├── faculty-dashboard.js     # Faculty dashboard logic
+│   ├── student-dashboard.html   # Student dashboard
+│   └── student-dashboard.js     # Student dashboard logic
 ├── backend/
-│   ├── config/db.js          # MySQL connection pool (mysql2)
-│   ├── middleware/auth.js    # JWT authentication
+│   ├── config/db.js
+│   ├── middleware/auth.js
 │   ├── routes/
-│   │   ├── auth.js           # Login / Register
-│   │   ├── students.js       # CRUD + search + pagination
-│   │   ├── faculty.js        # CRUD
-│   │   ├── attendance.js     # Mark & view attendance
-│   │   ├── results.js        # Add results with auto SGPA/CGPA
-│   │   ├── fees.js           # Fee records & payments
-│   │   ├── notifications.js  # Send & read notifications
-│   │   ├── timetable.js      # Class schedules
-│   │   └── dashboard.js      # Stats & analytics
-│   ├── uploads/              # File uploads
-│   ├── .env                  # Environment config
-│   ├── database.sql          # Full MySQL schema
+│   │   ├── auth.js
+│   │   ├── students.js
+│   │   ├── faculty.js
+│   │   ├── attendance.js
+│   │   ├── results.js
+│   │   ├── fees.js
+│   │   ├── notifications.js
+│   │   ├── timetable.js
+│   │   └── dashboard.js
+│   ├── uploads/
+│   ├── database.sql
 │   ├── package.json
-│   └── server.js             # Entry point
-│
-├── student-portal/
-│   ├── css/style.css         # Responsive + Dark mode
-│   ├── js/api.js             # API wrapper
-│   ├── index.html            # Landing page
-│   ├── login.html
-│   ├── register.html
-│   └── dashboard.html        # Student dashboard
-│
-└── admin-dashboard/
-    ├── css/admin.css         # Dark sidebar + Dark mode
-    ├── login.html
-    └── dashboard.html        # Full admin panel
+│   └── server.js
+└── README.md
 ```
 
 ## Tech Stack
@@ -48,11 +70,6 @@ college-management-system/
 - **File Uploads:** Multer
 - **Charts:** Chart.js
 - **PDF:** jsPDF
-
-## Prerequisites
-
-- [Node.js](https://nodejs.org/) installed
-- [MySQL](https://www.mysql.com/) or [XAMPP](https://www.apachefriends.org/) running locally
 
 ## Setup Instructions
 
@@ -75,6 +92,8 @@ DB_HOST=localhost
 DB_USER=root
 DB_PASSWORD=
 DB_NAME=college_management
+PORT=5000
+JWT_SECRET=your_jwt_secret_key
 ```
 
 ### 3. Install Backend Dependencies
@@ -89,11 +108,14 @@ npm start
 ```
 Server runs on `http://localhost:5000`
 
-### 5. Access the Applications
-- **Student Portal:** Open `student-portal/index.html` in browser (use Live Server for best experience)
-- **Admin Dashboard:** Open `admin-dashboard/login.html` in browser
+### 5. Access the Unified Application
+- **Main Application:** Open `http://localhost:5000` in browser
+- **Demo Credentials:**
+  - **Admin:** admin@college.edu / admin123
+  - **Faculty:** faculty@college.edu / faculty123
+  - **Student:** Use roll number as username / password
 
-## Features
+The application automatically detects user roles and routes them to appropriate dashboards!
 
 ### Student Portal
 - Modern landing page with hero, features, about, contact

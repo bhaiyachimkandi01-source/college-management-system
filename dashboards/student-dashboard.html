@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Dashboard - CMS</title>
+  <link rel="stylesheet" href="../css/unified.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  <div class="loader-overlay" id="loader"><div class="spinner"></div></div>
+  <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+
+  <div class="admin-layout">
+    <aside class="admin-sidebar" id="studentSidebar">
+      <div class="admin-sidebar-header">
+        <h3><i class="fas fa-user-graduate"></i> Student CMS</h3>
+      </div>
+      <ul class="admin-sidebar-menu">
+        <li><a href="#" class="active" data-tab="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li><a href="#" data-tab="attendance"><i class="fas fa-calendar-check"></i> My Attendance</a></li>
+        <li><a href="#" data-tab="results"><i class="fas fa-file-alt"></i> My Results</a></li>
+        <li><a href="#" data-tab="fees"><i class="fas fa-wallet"></i> Fee Payment</a></li>
+        <li><a href="#" data-tab="timetable"><i class="fas fa-calendar-alt"></i> Timetable</a></li>
+        <li><a href="#" data-tab="notifications"><i class="fas fa-bell"></i> Notifications</a></li>
+        <li><a href="#" data-tab="profile"><i class="fas fa-user"></i> Profile</a></li>
+      </ul>
+      <div class="admin-sidebar-footer">
+        <a href="#" onclick="logout()" style="color:#EF4444;display:flex;align-items:center;gap:0.5rem;font-weight:600;">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-header">
+        <h1 id="studentPageTitle">Dashboard</h1>
+        <div class="admin-header-actions">
+          <span id="studentUserName">Student</span>
+          <div style="width:40px;height:40px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;" id="studentAvatar">S</div>
+        </div>
+      </div>
+
+      <!-- DASHBOARD TAB -->
+      <div id="dashboard" class="tab-content active">
+        <div class="admin-stats">
+          <div class="admin-stat-card">
+            <h3>Attendance %</h3>
+            <div class="value" id="attendancePercent">85%</div>
+          </div>
+          <div class="admin-stat-card">
+            <h3>Current CGPA</h3>
+            <div class="value" id="currentCgpa">8.5</div>
+          </div>
+          <div class="admin-stat-card">
+            <h3>Fee Status</h3>
+            <div class="value" id="feeStatus" style="color:#22C55E;">Paid</div>
+          </div>
+          <div class="admin-stat-card">
+            <h3>Unread Notifications</h3>
+            <div class="value" id="unreadNotifications">2</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2rem;">
+          <div class="admin-stat-card">
+            <h3 style="margin-bottom:1rem;">Recent Attendance</h3>
+            <div id="recentAttendance">
+              <p style="color:var(--text-light);text-align:center;padding:1rem;">Loading...</p>
+            </div>
+          </div>
+          <div class="admin-stat-card">
+            <h3 style="margin-bottom:1rem;">Latest Results</h3>
+            <div id="latestResults">
+              <p style="color:var(--text-light);text-align:center;padding:1rem;">Loading...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ATTENDANCE TAB -->
+      <div id="attendance" class="tab-content">
+        <h3 style="margin-bottom:1rem;">My Attendance Record</h3>
+        <div class="admin-stat-card" style="margin-bottom:1.5rem;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+            <span><strong>Overall Attendance:</strong> <span id="overallAttendance">85%</span></span>
+            <span style="color:var(--text-light);">This Semester</span>
+          </div>
+          <div style="width:100%;height:20px;background:var(--bg-light);border-radius:10px;overflow:hidden;">
+            <div id="attendanceBar" style="height:100%;background:linear-gradient(90deg,var(--primary),var(--secondary));width:85%;border-radius:10px;"></div>
+          </div>
+        </div>
+
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Subject</th>
+                <th>Present</th>
+                <th>Total</th>
+                <th>Percentage</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="attendanceTableBody">
+              <tr><td colspan="5" style="text-align:center;padding:2rem;">Loading attendance...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- RESULTS TAB -->
+      <div id="results" class="tab-content">
+        <h3 style="margin-bottom:1rem;">My Academic Results</h3>
+        <div class="admin-stat-card" style="margin-bottom:1.5rem;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span><strong>Current CGPA:</strong> <span id="resultsCgpa">8.5</span></span>
+            <span style="color:var(--text-light);">Overall Performance</span>
+          </div>
+        </div>
+
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Semester</th>
+                <th>Subject</th>
+                <th>Marks</th>
+                <th>Grade</th>
+                <th>SGPA</th>
+                <th>Credits</th>
+              </tr>
+            </thead>
+            <tbody id="resultsTableBody">
+              <tr><td colspan="6" style="text-align:center;padding:2rem;">Loading results...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- FEES TAB -->
+      <div id="fees" class="tab-content">
+        <h3 style="margin-bottom:1rem;">Fee Payment Status</h3>
+        <div class="admin-stat-card" style="margin-bottom:1.5rem;">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;">
+            <div>
+              <strong>Total Fee:</strong><br>
+              <span style="font-size:1.2rem;color:var(--primary);">₹50,000</span>
+            </div>
+            <div>
+              <strong>Paid:</strong><br>
+              <span style="font-size:1.2rem;color:#22C55E;">₹45,000</span>
+            </div>
+            <div>
+              <strong>Pending:</strong><br>
+              <span style="font-size:1.2rem;color:#EF4444;">₹5,000</span>
+            </div>
+            <div>
+              <strong>Status:</strong><br>
+              <span style="background:#F59E0B;color:white;padding:4px 8px;border-radius:4px;font-size:0.85rem;">Partial</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:1.5rem;">
+          <button class="btn btn-success" onclick="alert('Payment gateway would open here')">Pay Pending Fees</button>
+        </div>
+
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="feesTableBody">
+              <tr>
+                <td>2024-01-15</td>
+                <td>Tuition Fee - Semester 1</td>
+                <td>₹25,000</td>
+                <td><span style="background:#22C55E;color:white;padding:4px 8px;border-radius:4px;font-size:0.85rem;">Paid</span></td>
+              </tr>
+              <tr>
+                <td>2024-01-20</td>
+                <td>Library Fee</td>
+                <td>₹2,000</td>
+                <td><span style="background:#22C55E;color:white;padding:4px 8px;border-radius:4px;font-size:0.85rem;">Paid</span></td>
+              </tr>
+              <tr>
+                <td>2024-02-01</td>
+                <td>Tuition Fee - Semester 2</td>
+                <td>₹25,000</td>
+                <td><span style="background:#EF4444;color:white;padding:4px 8px;border-radius:4px;font-size:0.85rem;">Pending</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TIMETABLE TAB -->
+      <div id="timetable" class="tab-content">
+        <h3 style="margin-bottom:1rem;">My Class Timetable</h3>
+        <div id="timetableContent">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;">
+            <div class="admin-stat-card">
+              <h4>Monday</h4>
+              <div style="margin-top:0.5rem;">
+                <div style="padding:0.5rem;margin-bottom:0.5rem;background:var(--bg-light);border-radius:4px;">
+                  <strong>9:00 AM</strong> - Computer Science 101<br>
+                  <small>Room 201</small>
+                </div>
+                <div style="padding:0.5rem;margin-bottom:0.5rem;background:var(--bg-light);border-radius:4px;">
+                  <strong>11:00 AM</strong> - Mathematics 101<br>
+                  <small>Room 105</small>
+                </div>
+              </div>
+            </div>
+            <div class="admin-stat-card">
+              <h4>Tuesday</h4>
+              <div style="margin-top:0.5rem;">
+                <div style="padding:0.5rem;margin-bottom:0.5rem;background:var(--bg-light);border-radius:4px;">
+                  <strong>10:00 AM</strong> - Physics 101<br>
+                  <small>Room 301</small>
+                </div>
+                <div style="padding:0.5rem;margin-bottom:0.5rem;background:var(--bg-light);border-radius:4px;">
+                  <strong>2:00 PM</strong> - Chemistry 101<br>
+                  <small>Room 205</small>
+                </div>
+              </div>
+            </div>
+            <div class="admin-stat-card">
+              <h4>Wednesday</h4>
+              <div style="margin-top:0.5rem;">
+                <div style="padding:0.5rem;margin-bottom:0.5rem;background:var(--bg-light);border-radius:4px;">
+                  <strong>9:00 AM</strong> - Computer Science 102<br>
+                  <small>Room 201</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOTIFICATIONS TAB -->
+      <div id="notifications" class="tab-content">
+        <h3 style="margin-bottom:1rem;">My Notifications</h3>
+        <div id="notificationsList">
+          <p style="text-align:center;color:var(--text-light);padding:2rem;">Loading notifications...</p>
+        </div>
+      </div>
+
+      <!-- PROFILE TAB -->
+      <div id="profile" class="tab-content">
+        <div class="admin-stat-card" style="max-width:600px;margin:0 auto;">
+          <h3 style="margin-bottom:1.5rem;">My Profile</h3>
+          <div id="profileContent">
+            <p style="text-align:center;color:var(--text-light);padding:2rem;">Loading profile...</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/unified.js"></script>
+  <script src="student-dashboard.js"></script>
+</body>
+</html>

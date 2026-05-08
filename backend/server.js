@@ -11,9 +11,15 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-app.use('/', express.static(path.join(__dirname, '../student-portal')));
-app.use('/admin', express.static(path.join(__dirname, '../admin-dashboard')));
-app.use('/faculty', express.static(path.join(__dirname, '../faculty-dashboard')));
+
+// Serve unified application
+app.use('/', express.static(path.join(__dirname, '../')));
+app.use('/dashboards', express.static(path.join(__dirname, '../dashboards')));
+
+// Legacy routes for backward compatibility
+app.use('/student-portal', express.static(path.join(__dirname, '../student-portal')));
+app.use('/admin-dashboard', express.static(path.join(__dirname, '../admin-dashboard')));
+app.use('/faculty-dashboard', express.static(path.join(__dirname, '../faculty-dashboard')));
 
 // Multer config for file uploads
 const storage = multer.diskStorage({

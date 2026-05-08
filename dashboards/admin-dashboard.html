@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard - CMS</title>
+  <link rel="stylesheet" href="../css/unified.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="loader-overlay" id="loader"><div class="spinner"></div></div>
+  <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+
+  <div class="admin-layout">
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="admin-sidebar-header">
+        <h3><i class="fas fa-shield-alt"></i> Admin CMS</h3>
+      </div>
+      <ul class="admin-sidebar-menu">
+        <li><a href="#" class="active" data-tab="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li><a href="#" data-tab="students"><i class="fas fa-user-graduate"></i> Students</a></li>
+        <li><a href="#" data-tab="faculty"><i class="fas fa-chalkboard-teacher"></i> Faculty</a></li>
+        <li><a href="#" data-tab="attendance"><i class="fas fa-calendar-check"></i> Attendance</a></li>
+        <li><a href="#" data-tab="results"><i class="fas fa-file-alt"></i> Results</a></li>
+        <li><a href="#" data-tab="fees"><i class="fas fa-wallet"></i> Fees</a></li>
+        <li><a href="#" data-tab="notifications"><i class="fas fa-bell"></i> Notifications</a></li>
+      </ul>
+      <div class="admin-sidebar-footer">
+        <a href="#" onclick="logout()" style="color:#EF4444;display:flex;align-items:center;gap:0.5rem;font-weight:600;">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-header">
+        <h1 id="adminPageTitle">Dashboard</h1>
+        <div class="admin-header-actions">
+          <span id="adminUserName">Admin</span>
+          <div style="width:40px;height:40px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;" id="adminAvatar">A</div>
+        </div>
+      </div>
+
+      <!-- DASHBOARD TAB -->
+      <div id="dashboard" class="tab-content active">
+        <div class="admin-stats" id="dashboardStats">
+          <div class="admin-stat-card">
+            <h3>Total Students</h3>
+            <div class="value" id="totalStudents">0</div>
+          </div>
+          <div class="admin-stat-card">
+            <h3>Total Faculty</h3>
+            <div class="value" id="totalFaculty">0</div>
+          </div>
+          <div class="admin-stat-card">
+            <h3>Fee Collection</h3>
+            <div class="value" id="feeCollection">₹0</div>
+          </div>
+          <div class="admin-stat-card">
+            <h3>Pending Fees</h3>
+            <div class="value" id="pendingFees">₹0</div>
+          </div>
+        </div>
+        <p style="text-align:center;color:var(--text-light);margin-top:2rem;">
+          Welcome to the Admin Dashboard. Use the sidebar menu to manage students, faculty, attendance, results, and fees.
+        </p>
+      </div>
+
+      <!-- STUDENTS TAB -->
+      <div id="students" class="tab-content">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+          <input type="text" id="studentSearch" class="search-box" placeholder="Search students..." style="flex:1;min-width:200px;" />
+          <button class="btn btn-primary" onclick="alert('Add student form would appear here')"><i class="fas fa-plus"></i> Add Student</button>
+        </div>
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Roll No</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Department</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="studentsTableBody">
+              <tr><td colspan="6" style="text-align:center;padding:2rem;">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- FACULTY TAB -->
+      <div id="faculty" class="tab-content">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+          <input type="text" id="facultySearch" class="search-box" placeholder="Search faculty..." style="flex:1;min-width:200px;" />
+          <button class="btn btn-primary" onclick="alert('Add faculty form would appear here')"><i class="fas fa-plus"></i> Add Faculty</button>
+        </div>
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Emp ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Department</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="facultyTableBody">
+              <tr><td colspan="6" style="text-align:center;padding:2rem;">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ATTENDANCE TAB -->
+      <div id="attendance" class="tab-content">
+        <p style="color:var(--text-light);margin-bottom:1rem;">View and manage student attendance records.</p>
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Subject</th>
+                <th>Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="attendanceTableBody">
+              <tr><td colspan="4" style="text-align:center;padding:2rem;">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- RESULTS TAB -->
+      <div id="results" class="tab-content">
+        <p style="color:var(--text-light);margin-bottom:1rem;">Manage student results and grades.</p>
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Subject</th>
+                <th>Marks</th>
+                <th>Grade</th>
+                <th>SGPA</th>
+              </tr>
+            </thead>
+            <tbody id="resultsTableBody">
+              <tr><td colspan="5" style="text-align:center;padding:2rem;">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- FEES TAB -->
+      <div id="fees" class="tab-content">
+        <p style="color:var(--text-light);margin-bottom:1rem;">Track and manage student fees.</p>
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Total Fee</th>
+                <th>Paid</th>
+                <th>Pending</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="feesTableBody">
+              <tr><td colspan="5" style="text-align:center;padding:2rem;">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- NOTIFICATIONS TAB -->
+      <div id="notifications" class="tab-content">
+        <div style="margin-bottom:1.5rem;">
+          <button class="btn btn-primary" onclick="alert('Send notification form would appear here')"><i class="fas fa-plus"></i> Send Notification</button>
+        </div>
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Message</th>
+                <th>Recipients</th>
+                <th>Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="notificationsTableBody">
+              <tr><td colspan="4" style="text-align:center;padding:2rem;">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/unified.js"></script>
+  <script src="admin-dashboard.js"></script>
+</body>
+</html>
