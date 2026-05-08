@@ -139,11 +139,9 @@ CREATE TABLE IF NOT EXISTS timetable (
 );
 
 -- Insert default admin (password: admin123)
--- Password is bcrypt hash of 'admin123'
 INSERT IGNORE INTO admins (name, email, password, role) VALUES 
-('Super Admin', 'admin@college.edu', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'superadmin');
+('Super Admin', 'admin@college.edu', '$2a$10$2SQjCMCDR/OLtmk7Y54KL.RZpVwqJFJGbGRaKVsk.V0iMdttz814e', 'superadmin');
 
 -- Insert default faculty (password: faculty123)
--- Password is bcrypt hash of 'faculty123'
 INSERT IGNORE INTO faculty (name, email, password, employee_id, department, designation, status) VALUES 
-('Dr. John Smith', 'faculty@college.edu', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'FAC001', 'Computer Science', 'Assistant Professor', 'active');
+('Dr. John Smith', 'faculty@college.edu', '$2a$10$WNNqRnVkVz0Zxqt8Un4ROOCQ3BE2mh87eH0uP4e0ye6/0L1YsQjty', 'FAC001', 'Computer Science', 'Assistant Professor', 'active');

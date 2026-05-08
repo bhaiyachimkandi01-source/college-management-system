@@ -3,49 +3,324 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>College Management System - Unified Portal</title>
-  <link rel="stylesheet" href="css/unified.css" />
+  <title>College Management System - Main Portal</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', 'Inter', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      width: 100%;
+    }
+
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 60px;
+    }
+
+    .header h1 {
+      font-size: 3rem;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .header p {
+      font-size: 1.2rem;
+      opacity: 0.95;
+      text-shadow: 0 1px 5px rgba(0,0,0,0.2);
+    }
+
+    .portals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .portal-card {
+      background: white;
+      border-radius: 15px;
+      padding: 40px 30px;
+      text-align: center;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .portal-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+    }
+
+    .portal-icon {
+      font-size: 3.5rem;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 15px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .student-icon { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .admin-icon { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+    .faculty-icon { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+
+    .portal-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+      color: #333;
+    }
+
+    .portal-card p {
+      color: #666;
+      margin-bottom: 25px;
+      line-height: 1.6;
+      flex-grow: 1;
+    }
+
+    .portal-button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 12px 30px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .portal-button:hover {
+      transform: scale(1.05);
+    }
+
+    .portal-card:nth-child(2) .portal-icon {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    .portal-card:nth-child(2) .portal-button {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    .portal-card:nth-child(3) .portal-icon {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+
+    .portal-card:nth-child(3) .portal-button {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+
+    .footer {
+      text-align: center;
+      color: white;
+      margin-top: 40px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .credentials {
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 30px auto;
+      max-width: 600px;
+      color: white;
+      text-align: left;
+    }
+
+    .credentials h4 {
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+    }
+
+    .credentials table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .credentials th,
+    .credentials td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .credentials th {
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .credentials td {
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 2rem;
+      }
+
+      .portals-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .portal-card {
+        padding: 30px 20px;
+      }
+    }
+
+    .tech-stack {
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 25px;
+      color: white;
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .tech-stack h4 {
+      margin-bottom: 15px;
+    }
+
+    .tech-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+    }
+
+    .tech-badge {
+      background: rgba(255,255,255,0.2);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+    }
+  </style>
 </head>
 <body>
-  <div class="loader-overlay" id="loader"><div class="spinner"></div></div>
-  <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
-
-  <div class="landing-page">
-    <div class="landing-hero">
+  <div class="container">
+    <div class="header">
       <h1><i class="fas fa-graduation-cap"></i> College Management System</h1>
-      <p>Unified Portal for Students, Faculty & Administrators</p>
-      <button class="btn-primary" onclick="scrollToLogin()">Get Started</button>
+      <p>Choose Your Portal to Access Dashboard</p>
     </div>
 
-    <div class="features-section">
-      <div class="feature-card">
-        <i class="fas fa-user-graduate"></i>
+    <div class="portals-grid">
+      <!-- Student Portal -->
+      <a href="student.html" class="portal-card">
+        <div class="portal-icon student-icon">
+          <i class="fas fa-user-graduate"></i>
+        </div>
         <h3>Student Portal</h3>
-        <p>Manage attendance, view results, pay fees, and access timetables</p>
-      </div>
-      <div class="feature-card">
-        <i class="fas fa-chalkboard-teacher"></i>
-        <h3>Faculty Portal</h3>
-        <p>Manage classes, mark attendance, and post results</p>
-      </div>
-      <div class="feature-card">
-        <i class="fas fa-shield-alt"></i>
+        <p>Access attendance records, view results, track fee payments, check timetable, and manage your academic profile</p>
+        <button class="portal-button">Enter Portal</button>
+      </a>
+
+      <!-- Admin Dashboard -->
+      <a href="admin.html" class="portal-card">
+        <div class="portal-icon admin-icon">
+          <i class="fas fa-shield-alt"></i>
+        </div>
         <h3>Admin Dashboard</h3>
-        <p>Full management of students, faculty, fees, and reports</p>
+        <p>Manage students and faculty, monitor fee collections, view analytics, and handle system administration</p>
+        <button class="portal-button">Enter Dashboard</button>
+      </a>
+
+      <!-- Faculty Portal -->
+      <a href="faculty.html" class="portal-card">
+        <div class="portal-icon faculty-icon">
+          <i class="fas fa-chalkboard-teacher"></i>
+        </div>
+        <h3>Faculty Dashboard</h3>
+        <p>Manage classes, mark student attendance, post results, view notifications, and track performance</p>
+        <button class="portal-button">Enter Dashboard</button>
+      </a>
+    </div>
+
+    <!-- Demo Credentials -->
+    <div class="credentials">
+      <h4><i class="fas fa-key"></i> Demo Credentials</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Role</th>
+            <th>Email/Username</th>
+            <th>Password</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Student</strong></td>
+            <td>CS001</td>
+            <td>password123</td>
+          </tr>
+          <tr>
+            <td><strong>Faculty</strong></td>
+            <td>faculty@college.edu</td>
+            <td>faculty123</td>
+          </tr>
+          <tr>
+            <td><strong>Admin</strong></td>
+            <td>admin@college.edu</td>
+            <td>admin123</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Tech Stack -->
+    <div class="tech-stack">
+      <h4><i class="fas fa-code"></i> Built With</h4>
+      <div class="tech-list">
+        <div class="tech-badge">HTML5</div>
+        <div class="tech-badge">CSS3</div>
+        <div class="tech-badge">JavaScript</div>
+        <div class="tech-badge">Node.js</div>
+        <div class="tech-badge">Express.js</div>
+        <div class="tech-badge">MySQL</div>
+        <div class="tech-badge">JWT Auth</div>
+        <div class="tech-badge">REST API</div>
       </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p><i class="fas fa-info-circle"></i> Choose a portal above to get started</p>
+      <p style="margin-top: 15px; font-size: 0.9rem; opacity: 0.8;">
+        Designed & Built with ❤️ | <a href="README.md" style="color: white; text-decoration: underline;">Documentation</a> | 
+        <a href="CONTRIBUTING.md" style="color: white; text-decoration: underline;">Contributing</a>
+      </p>
     </div>
   </div>
-
-  <div class="auth-section" id="authSection">
-    <div class="auth-container">
-      <div class="auth-box">
-        <h2><i class="fas fa-sign-in-alt"></i> Unified Login Portal</h2>
-        <p class="subtitle">Login with your credentials to access your dashboard</p>
-        
-        <form id="loginForm">
-          <div class="form-group">
-            <label>Email Address</label>
+</body>
+</html>
             <input type="email" id="email" class="form-control" placeholder="you@college.edu" required />
           </div>
           <div class="form-group">
@@ -69,12 +344,693 @@
         </div>
 
         <div class="auth-links">
-          Don't have an account? <a href="register.html">Register here</a>
+          Don't have an account? <a href="#" onclick="showRegister()">Register here</a>
         </div>
       </div>
     </div>
   </div>
 
-  <script src="js/unified.js"></script>
+  <!-- REGISTER SECTION -->
+  <div class="auth-section" id="registerSection" style="display:none;">
+    <div class="auth-container">
+      <div class="auth-box">
+        <h2><i class="fas fa-user-plus"></i> Student Registration</h2>
+        <p class="subtitle">Create your student account</p>
+
+        <form id="registerForm">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" id="regName" class="form-control" placeholder="Enter full name" required />
+            </div>
+            <div class="form-group">
+              <label>Roll Number</label>
+              <input type="text" id="regRollNumber" class="form-control" placeholder="e.g., CS001" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="regEmail" class="form-control" placeholder="you@college.edu" required />
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" id="regPassword" class="form-control" placeholder="Create password" required />
+            </div>
+            <div class="form-group">
+              <label>Confirm Password</label>
+              <input type="password" id="regConfirmPassword" class="form-control" placeholder="Confirm password" required />
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;">
+            <div class="form-group">
+              <label>Department</label>
+              <select id="regDepartment" class="form-control" required>
+                <option value="">Select Department</option>
+                <option value="Computer Science">Computer Science</option>
+                <option value="Mathematics">Mathematics</option>
+                <option value="Physics">Physics</option>
+                <option value="Chemistry">Chemistry</option>
+                <option value="English">English</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Course</label>
+              <select id="regCourse" class="form-control" required>
+                <option value="">Select Course</option>
+                <option value="B.Tech">B.Tech</option>
+                <option value="B.Sc">B.Sc</option>
+                <option value="B.A">B.A</option>
+                <option value="M.Tech">M.Tech</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Semester</label>
+              <select id="regSemester" class="form-control" required>
+                <option value="">Select Semester</option>
+                <option value="1">1st Semester</option>
+                <option value="2">2nd Semester</option>
+                <option value="3">3rd Semester</option>
+                <option value="4">4th Semester</option>
+                <option value="5">5th Semester</option>
+                <option value="6">6th Semester</option>
+                <option value="7">7th Semester</option>
+                <option value="8">8th Semester</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="tel" id="regPhone" class="form-control" placeholder="Enter phone number" />
+            </div>
+            <div class="form-group">
+              <label>Date of Birth</label>
+              <input type="date" id="regDob" class="form-control" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Profile Photo</label>
+            <input type="file" id="regProfilePhoto" class="form-control" accept="image/*" />
+          </div>
+
+          <button type="submit" class="btn-submit">Register</button>
+        </form>
+
+        <div class="auth-links">
+          Already have an account? <a href="#" onclick="showLogin()">Login here</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN DASHBOARD -->
+  <div class="admin-layout" id="adminDashboard" style="display:none;">
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="admin-sidebar-header">
+        <h3><i class="fas fa-shield-alt"></i> Admin CMS</h3>
+      </div>
+      <ul class="admin-sidebar-menu">
+        <li><a href="#" class="active" data-tab="admin-dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li><a href="#" data-tab="admin-students"><i class="fas fa-user-graduate"></i> Students</a></li>
+        <li><a href="#" data-tab="admin-faculty"><i class="fas fa-chalkboard-teacher"></i> Faculty</a></li>
+        <li><a href="#" data-tab="admin-attendance"><i class="fas fa-calendar-check"></i> Attendance</a></li>
+        <li><a href="#" data-tab="admin-results"><i class="fas fa-file-alt"></i> Results</a></li>
+        <li><a href="#" data-tab="admin-fees"><i class="fas fa-wallet"></i> Fees</a></li>
+        <li><a href="#" data-tab="admin-notifications"><i class="fas fa-bell"></i> Notifications</a></li>
+      </ul>
+      <div class="admin-sidebar-footer">
+        <a href="#" onclick="logout()" style="color:#EF4444;display:flex;align-items:center;gap:0.5rem;font-weight:600;">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-header">
+        <h1 id="adminPageTitle">Dashboard</h1>
+        <div class="admin-header-actions">
+          <span id="adminUserName">Admin</span>
+          <div style="width:40px;height:40px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;" id="adminAvatar">A</div>
+        </div>
+      </div>
+
+      <!-- ADMIN DASHBOARD TAB -->
+      <div id="admin-dashboard" class="tab-content active">
+        <div class="admin-stats" id="adminDashboardStats">
+          <div class="admin-stat-card">
+            <h3>Total Students</h3>
+            <div class="value" id="adminTotalStudents">0</div>
+          </div>
+          <div class="admin-stat-card">
+            <h3>Total Faculty</h3>
+            <div class="value" id="adminTotalFaculty">0</div>
+          </div>
+          <div class="admin-stat-card">
+            <h3>Fee Collection</h3>
+            <div class="value" id="adminFeeCollection">₹0</div>
+          </div>
+          <div class="admin-stat-card">
+            <h3>Pending Fees</h3>
+            <div class="value" id="adminPendingFees">₹0</div>
+          </div>
+        </div>
+        <p style="text-align:center;color:var(--text-light);margin-top:2rem;">
+          Welcome to the Admin Dashboard. Use the sidebar menu to manage students, faculty, attendance, results, and fees.
+        </p>
+      </div>
+
+      <!-- ADMIN STUDENTS TAB -->
+      <div id="admin-students" class="tab-content">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+          <input type="text" id="adminStudentSearch" class="search-box" placeholder="Search students..." style="flex:1;min-width:200px;" />
+          <button class="btn btn-primary" onclick="alert('Add student form would appear here')"><i class="fas fa-plus"></i> Add Student</button>
+        </div>
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Roll No</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Department</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="adminStudentsTableBody">
+              <tr><td colspan="6" style="text-align:center;padding:2rem;">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ADMIN FACULTY TAB -->
+      <div id="admin-faculty" class="tab-content">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+          <input type="text" id="adminFacultySearch" class="search-box" placeholder="Search faculty..." style="flex:1;min-width:200px;" />
+          <button class="btn btn-primary" onclick="alert('Add faculty form would appear here')"><i class="fas fa-plus"></i> Add Faculty</button>
+        </div>
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Emp ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Department</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="adminFacultyTableBody">
+              <tr><td colspan="6" style="text-align:center;padding:2rem;">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ADMIN ATTENDANCE TAB -->
+      <div id="admin-attendance" class="tab-content">
+        <p style="color:var(--text-light);margin-bottom:1rem;">View and manage student attendance records.</p>
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Subject</th>
+                <th>Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="adminAttendanceTableBody">
+              <tr><td colspan="4" style="text-align:center;padding:2rem;">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ADMIN RESULTS TAB -->
+      <div id="admin-results" class="tab-content">
+        <p style="color:var(--text-light);margin-bottom:1rem;">Manage student results and grades.</p>
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Subject</th>
+                <th>Marks</th>
+                <th>Grade</th>
+                <th>SGPA</th>
+              </tr>
+            </thead>
+            <tbody id="adminResultsTableBody">
+              <tr><td colspan="5" style="text-align:center;padding:2rem;">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ADMIN FEES TAB -->
+      <div id="admin-fees" class="tab-content">
+        <p style="color:var(--text-light);margin-bottom:1rem;">Track and manage student fees.</p>
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Total Fee</th>
+                <th>Paid</th>
+                <th>Pending</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="adminFeesTableBody">
+              <tr><td colspan="5" style="text-align:center;padding:2rem;">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ADMIN NOTIFICATIONS TAB -->
+      <div id="admin-notifications" class="tab-content">
+        <div style="margin-bottom:1.5rem;">
+          <button class="btn btn-primary" onclick="alert('Send notification form would appear here')"><i class="fas fa-plus"></i> Send Notification</button>
+        </div>
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Message</th>
+                <th>Recipients</th>
+                <th>Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="adminNotificationsTableBody">
+              <tr><td colspan="4" style="text-align:center;padding:2rem;">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- FACULTY DASHBOARD -->
+  <div class="admin-layout" id="facultyDashboard" style="display:none;">
+    <aside class="admin-sidebar" id="facultySidebar">
+      <div class="admin-sidebar-header">
+        <h3><i class="fas fa-chalkboard-teacher"></i> Faculty CMS</h3>
+      </div>
+      <ul class="admin-sidebar-menu">
+        <li><a href="#" class="active" data-tab="faculty-dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li><a href="#" data-tab="faculty-attendance"><i class="fas fa-calendar-check"></i> Mark Attendance</a></li>
+        <li><a href="#" data-tab="faculty-results"><i class="fas fa-file-alt"></i> Post Results</a></li>
+        <li><a href="#" data-tab="faculty-notifications"><i class="fas fa-bell"></i> Notifications</a></li>
+        <li><a href="#" data-tab="faculty-profile"><i class="fas fa-user"></i> Profile</a></li>
+      </ul>
+      <div class="admin-sidebar-footer">
+        <a href="#" onclick="logout()" style="color:#EF4444;display:flex;align-items:center;gap:0.5rem;font-weight:600;">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-header">
+        <h1 id="facultyPageTitle">Dashboard</h1>
+        <div class="admin-header-actions">
+          <span id="facultyUserName">Faculty</span>
+          <div style="width:40px;height:40px;border-radius:50%;background:var(--secondary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;" id="facultyAvatar">F</div>
+        </div>
+      </div>
+
+      <!-- FACULTY DASHBOARD TAB -->
+      <div id="faculty-dashboard" class="tab-content active">
+        <div class="admin-stats">
+          <div class="admin-stat-card">
+            <h3>My Classes</h3>
+            <div class="value" id="facultyMyClasses">0</div>
+          </div>
+          <div class="admin-stat-card">
+            <h3>Students Taught</h3>
+            <div class="value" id="facultyStudentsTaught">0</div>
+          </div>
+          <div class="admin-stat-card">
+            <h3>Results Posted</h3>
+            <div class="value" id="facultyResultsPosted">0</div>
+          </div>
+          <div class="admin-stat-card">
+            <h3>Unread Notifications</h3>
+            <div class="value" id="facultyUnreadNotifications">0</div>
+          </div>
+        </div>
+        <p style="text-align:center;color:var(--text-light);margin-top:2rem;">
+          Welcome to the Faculty Dashboard. Use the sidebar to mark attendance, post results, and manage your classes.
+        </p>
+      </div>
+
+      <!-- FACULTY ATTENDANCE TAB -->
+      <div id="faculty-attendance" class="tab-content">
+        <div style="margin-bottom:1.5rem;">
+          <h3 style="margin-bottom:1rem;">Mark Student Attendance</h3>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1rem;">
+            <select id="facultyAttendanceClass" class="search-box">
+              <option value="">Select Class</option>
+              <option value="CS101">Computer Science 101</option>
+              <option value="CS102">Computer Science 102</option>
+              <option value="MATH101">Mathematics 101</option>
+            </select>
+            <input type="date" id="facultyAttendanceDate" class="search-box" />
+          </div>
+          <button class="btn btn-primary" onclick="loadFacultyAttendanceStudents()">Load Students</button>
+        </div>
+
+        <div id="facultyAttendanceStudents" style="display:none;">
+          <div class="admin-table-container">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Roll No</th>
+                  <th>Name</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="facultyAttendanceTableBody">
+                <tr><td colspan="4" style="text-align:center;padding:2rem;">Select a class and date to load students</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="margin-top:1rem;text-align:right;">
+            <button class="btn btn-success" onclick="submitFacultyAttendance()">Submit Attendance</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- FACULTY RESULTS TAB -->
+      <div id="faculty-results" class="tab-content">
+        <div style="margin-bottom:1.5rem;">
+          <h3 style="margin-bottom:1rem;">Post Student Results</h3>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1rem;">
+            <select id="facultyResultsClass" class="search-box">
+              <option value="">Select Class</option>
+              <option value="CS101">Computer Science 101</option>
+              <option value="CS102">Computer Science 102</option>
+              <option value="MATH101">Mathematics 101</option>
+            </select>
+            <input type="text" id="facultyResultsSemester" class="search-box" placeholder="Semester (e.g., Fall 2024)" />
+          </div>
+          <button class="btn btn-primary" onclick="loadFacultyResultsStudents()">Load Students</button>
+        </div>
+
+        <div id="facultyResultsStudents" style="display:none;">
+          <div class="admin-table-container">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Roll No</th>
+                  <th>Name</th>
+                  <th>Marks</th>
+                  <th>Grade</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="facultyResultsTableBody">
+                <tr><td colspan="5" style="text-align:center;padding:2rem;">Select a class to load students</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="margin-top:1rem;text-align:right;">
+            <button class="btn btn-success" onclick="submitFacultyResults()">Submit Results</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- FACULTY NOTIFICATIONS TAB -->
+      <div id="faculty-notifications" class="tab-content">
+        <h3 style="margin-bottom:1rem;">My Notifications</h3>
+        <div id="facultyNotificationsList">
+          <p style="text-align:center;color:var(--text-light);padding:2rem;">Loading notifications...</p>
+        </div>
+      </div>
+
+      <!-- FACULTY PROFILE TAB -->
+      <div id="faculty-profile" class="tab-content">
+        <div class="admin-stat-card" style="max-width:600px;margin:0 auto;">
+          <h3 style="margin-bottom:1.5rem;">My Profile</h3>
+          <div id="facultyProfileContent">
+            <p style="text-align:center;color:var(--text-light);padding:2rem;">Loading profile...</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- STUDENT DASHBOARD -->
+  <div class="admin-layout" id="studentDashboard" style="display:none;">
+    <aside class="admin-sidebar" id="studentSidebar">
+      <div class="admin-sidebar-header">
+        <h3><i class="fas fa-user-graduate"></i> Student CMS</h3>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-header">
+        <h1 id="studentPageTitle">Dashboard</h1>
+        <div class="admin-header-actions">
+          <span id="studentUserName">Student</span>
+          <div style="width:40px;height:40px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;" id="studentAvatar">S</div>
+        </div>
+      </div>
+
+      <!-- STUDENT DASHBOARD TAB -->
+      <div id="student-dashboard" class="tab-content active">
+        <div class="admin-stats">
+          <div class="admin-stat-card">
+            <h3>Attendance %</h3>
+            <div class="value" id="studentAttendancePercent">85%</div>
+          </div>
+          <div class="admin-stat-card">
+            <h3>Current CGPA</h3>
+            <div class="value" id="studentCurrentCgpa">8.5</div>
+          </div>
+          <div class="admin-stat-card">
+            <h3>Fee Status</h3>
+            <div class="value" id="studentFeeStatus" style="color:#22C55E;">Paid</div>
+          </div>
+          <div class="admin-stat-card">
+            <h3>Unread Notifications</h3>
+            <div class="value" id="studentUnreadNotifications">2</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2rem;">
+          <div class="admin-stat-card">
+            <h3 style="margin-bottom:1rem;">Recent Attendance</h3>
+            <div id="studentRecentAttendance">
+              <p style="color:var(--text-light);text-align:center;padding:1rem;">Loading...</p>
+            </div>
+          </div>
+          <div class="admin-stat-card">
+            <h3 style="margin-bottom:1rem;">Latest Results</h3>
+            <div id="studentLatestResults">
+              <p style="color:var(--text-light);text-align:center;padding:1rem;">Loading...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STUDENT ATTENDANCE TAB -->
+      <div id="student-attendance" class="tab-content">
+        <h3 style="margin-bottom:1rem;">My Attendance Record</h3>
+        <div class="admin-stat-card" style="margin-bottom:1.5rem;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+            <span><strong>Overall Attendance:</strong> <span id="studentOverallAttendance">85%</span></span>
+            <span style="color:var(--text-light);">This Semester</span>
+          </div>
+          <div style="width:100%;height:20px;background:var(--bg-light);border-radius:10px;overflow:hidden;">
+            <div id="studentAttendanceBar" style="height:100%;background:linear-gradient(90deg,var(--primary),var(--secondary));width:85%;border-radius:10px;"></div>
+          </div>
+        </div>
+
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Subject</th>
+                <th>Present</th>
+                <th>Total</th>
+                <th>Percentage</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="studentAttendanceTableBody">
+              <tr><td colspan="5" style="text-align:center;padding:2rem;">Loading attendance...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- STUDENT RESULTS TAB -->
+      <div id="student-results" class="tab-content">
+        <h3 style="margin-bottom:1rem;">My Academic Results</h3>
+        <div class="admin-stat-card" style="margin-bottom:1.5rem;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span><strong>Current CGPA:</strong> <span id="studentResultsCgpa">8.5</span></span>
+            <span style="color:var(--text-light);">Overall Performance</span>
+          </div>
+        </div>
+
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Semester</th>
+                <th>Subject</th>
+                <th>Marks</th>
+                <th>Grade</th>
+                <th>SGPA</th>
+                <th>Credits</th>
+              </tr>
+            </thead>
+            <tbody id="studentResultsTableBody">
+              <tr><td colspan="6" style="text-align:center;padding:2rem;">Loading results...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- STUDENT FEES TAB -->
+      <div id="student-fees" class="tab-content">
+        <h3 style="margin-bottom:1rem;">Fee Payment Status</h3>
+        <div class="admin-stat-card" style="margin-bottom:1.5rem;">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;">
+            <div>
+              <strong>Total Fee:</strong><br>
+              <span style="font-size:1.2rem;color:var(--primary);">₹50,000</span>
+            </div>
+            <div>
+              <strong>Paid:</strong><br>
+              <span style="font-size:1.2rem;color:#22C55E;">₹45,000</span>
+            </div>
+            <div>
+              <strong>Pending:</strong><br>
+              <span style="font-size:1.2rem;color:#EF4444;">₹5,000</span>
+            </div>
+            <div>
+              <strong>Status:</strong><br>
+              <span style="background:#F59E0B;color:white;padding:4px 8px;border-radius:4px;font-size:0.85rem;">Partial</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:1.5rem;">
+          <button class="btn btn-success" onclick="alert('Payment gateway would open here')">Pay Pending Fees</button>
+        </div>
+
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="studentFeesTableBody">
+              <tr>
+                <td>2024-01-15</td>
+                <td>Tuition Fee - Semester 1</td>
+                <td>₹25,000</td>
+                <td><span style="background:#22C55E;color:white;padding:4px 8px;border-radius:4px;font-size:0.85rem;">Paid</span></td>
+              </tr>
+              <tr>
+                <td>2024-01-20</td>
+                <td>Library Fee</td>
+                <td>₹2,000</td>
+                <td><span style="background:#22C55E;color:white;padding:4px 8px;border-radius:4px;font-size:0.85rem;">Paid</span></td>
+              </tr>
+              <tr>
+                <td>2024-02-01</td>
+                <td>Tuition Fee - Semester 2</td>
+                <td>₹25,000</td>
+                <td><span style="background:#EF4444;color:white;padding:4px 8px;border-radius:4px;font-size:0.85rem;">Pending</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- STUDENT TIMETABLE TAB -->
+      <div id="student-timetable" class="tab-content">
+        <h3 style="margin-bottom:1rem;">My Class Timetable</h3>
+        <div id="studentTimetableContent">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;">
+            <div class="admin-stat-card">
+              <h4>Monday</h4>
+              <div style="margin-top:0.5rem;">
+                <div style="padding:0.5rem;margin-bottom:0.5rem;background:var(--bg-light);border-radius:4px;">
+                  <strong>9:00 AM</strong> - Computer Science 101<br>
+                  <small>Room 201</small>
+                </div>
+                <div style="padding:0.5rem;margin-bottom:0.5rem;background:var(--bg-light);border-radius:4px;">
+                  <strong>11:00 AM</strong> - Mathematics 101<br>
+                  <small>Room 105</small>
+                </div>
+              </div>
+            </div>
+            <div class="admin-stat-card">
+              <h4>Tuesday</h4>
+              <div style="margin-top:0.5rem;">
+                <div style="padding:0.5rem;margin-bottom:0.5rem;background:var(--bg-light);border-radius:4px;">
+                  <strong>10:00 AM</strong> - Physics 101<br>
+                  <small>Room 301</small>
+                </div>
+                <div style="padding:0.5rem;margin-bottom:0.5rem;background:var(--bg-light);border-radius:4px;">
+                  <strong>2:00 PM</strong> - Chemistry 101<br>
+                  <small>Room 205</small>
+                </div>
+              </div>
+            </div>
+            <div class="admin-stat-card">
+              <h4>Wednesday</h4>
+              <div style="margin-top:0.5rem;">
+                <div style="padding:0.5rem;margin-bottom:0.5rem;background:var(--bg-light);border-radius:4px;">
+                  <strong>9:00 AM</strong> - Computer Science 102<br>
+                  <small>Room 201</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STUDENT NOTIFICATIONS TAB -->
+      <div id="student-notifications" class="tab-content">
+        <h3 style="margin-bottom:1rem;">My Notifications</h3>
+        <div id="studentNotificationsList">
+          <p style="text-align:center;color:var(--text-light);padding:2rem;">Loading notifications...</p>
+        </div>
+      </div>
+
+      <!-- STUDENT PROFILE TAB -->
+      <div id="student-profile" class="tab-content">
+        <div class="admin-stat-card" style="max-width:600px;margin:0 auto;">
+          <h3 style="margin-bottom:1.5rem;">My Profile</h3>
+          <div id="studentProfileContent">
+            <p style="text-align:center;color:var(--text-light);padding:2rem;">Loading profile...</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
 </body>
 </html>

@@ -296,3 +296,20 @@ textarea.form-control { min-height: 120px; resize: vertical; }
 .mb-1 { margin-bottom: 0.5rem; } .mb-2 { margin-bottom: 1rem; } .mb-3 { margin-bottom: 1.5rem; }
 .flex { display: flex; } .items-center { align-items: center; } .justify-between { justify-content: space-between; }
 .gap-1 { gap: 0.5rem; } .gap-2 { gap: 1rem; }
+
+/* Modern enhancements */
+html { scroll-behavior: smooth; }
+.navbar { backdrop-filter: blur(10px); background: rgba(255,255,255,0.85); }
+[data-theme="dark"] .navbar { background: rgba(30,41,59,0.85); }
+.hero h1 { animation: fadeInUp 1s ease; }
+.hero p { animation: fadeInUp 1.2s ease; }
+.hero-btns { animation: fadeInUp 1.4s ease; }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+.feature-card { border: 1px solid var(--border); }
+.form-control:focus { box-shadow: 0 0 0 3px rgba(79,70,229,0.15); }
+.nav-links .nav-btn { transition: all 0.2s; }
+.hero-btn { box-shadow: 0 4px 14px rgba(0,0,0,0.15); }
+.about-img { transition: transform 0.5s; }
+.about-img:hover { transform: scale(1.02); }
+.contact-form .form-control { background: var(--bg); }
+.footer-content a { transition: color 0.2s; }
