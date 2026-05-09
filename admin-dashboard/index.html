@@ -34,7 +34,7 @@
   </div>
 
   <script>
-    const API_BASE = 'http://localhost:5000/api';
+    const API_BASE = window.location.origin + '/api';
     function showLoader() { document.getElementById('loader')?.classList.add('active'); }
     function hideLoader() { document.getElementById('loader')?.classList.remove('active'); }
     function showToast(message, type = 'info') {

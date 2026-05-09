@@ -72,6 +72,107 @@
       box-shadow: 0 25px 60px rgba(0,0,0,0.3);
     }
 
+    .auth-section {
+      min-height: calc(100vh - 120px);
+      width: 100%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      background: rgba(255,255,255,0.05);
+    }
+
+    .auth-container {
+      width: min(860px, 100%);
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .auth-box {
+      width: 100%;
+      background: rgba(255,255,255,0.95);
+      border-radius: 24px;
+      padding: 36px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.12);
+      color: #111827;
+    }
+
+    .auth-box h2 {
+      margin-bottom: 0.75rem;
+      font-size: 2rem;
+      color: #111827;
+    }
+
+    .auth-box .subtitle {
+      margin-bottom: 1.5rem;
+      color: #4b5563;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #374151;
+      font-weight: 600;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid #d1d5db;
+      background: #ffffff;
+      color: #111827;
+      font-size: 0.95rem;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.12);
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 13px 18px;
+      border-radius: 14px;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      margin-top: 10px;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 40px rgba(102,126,234,0.18);
+    }
+
+    .auth-info,
+    .auth-links {
+      margin-top: 1rem;
+      text-align: center;
+      color: #475569;
+    }
+
+    .auth-links a {
+      color: #4f46e5;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .auth-links a:hover {
+      text-decoration: underline;
+    }
+
     .portal-icon {
       font-size: 3.5rem;
       margin-bottom: 20px;

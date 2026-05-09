@@ -186,7 +186,7 @@
   </div>
 
   <script>
-    const API_BASE = 'http://localhost:5000/api';
+    const API_BASE = window.location.origin + '/api';
     function getAdminToken() { return localStorage.getItem('adminToken'); }
     function getAdminHeaders() { const h = { 'Content-Type': 'application/json' }; const t = getAdminToken(); if (t) h['Authorization'] = `Bearer ${t}`; return h; }
     function showLoader() { document.getElementById('loader')?.classList.add('active'); }
